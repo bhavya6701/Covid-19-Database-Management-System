@@ -1,0 +1,17 @@
+.navbar-organization {
+	color: white !important;
+}
+
+.navbar-name {
+	text-decoration: none;
+	color: rgb(178, 178, 178);
+}
+
+.navbar-name:hover {
+	text-decoration: none;
+	color: rgb(255, 255, 255);
+}
+
+.input-box {
+	width: 20rem !important;
+}
