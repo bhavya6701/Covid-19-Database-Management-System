@@ -54,10 +54,10 @@ $db->execute();
 
   <div class="container pt-3">
     <h1 class="display-4">Users:</h1>
-    <form class="d-flex pt-2" role="search">
+    <div class="d-flex pt-2">
       <input id="searchID" class="form-control me-2 input-box" type="search" placeholder="Search User (By User ID)" aria-label="Search User">
       <button id="searchUser" class="btn btn-outline-dark" type="button"><i class="bi bi-search"></i></button>
-    </form>
+    </div>
 
     <table class="table table-bordered my-4 align-middle">
       <thead>

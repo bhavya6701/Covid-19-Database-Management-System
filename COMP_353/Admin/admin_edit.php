@@ -53,42 +53,58 @@ $db->execute();
     </nav>
 
     <div class="container pt-3">
-        <h1>Users:</h1>
-        <form class="d-flex pt-2" role="search">
-            <input id="searchID" class="form-control me-2 input-box" type="search" placeholder="Search User (By User ID)" aria-label="Search User">
-            <button id="searchUser" class="btn btn-outline-dark" type="button"><i class="bi bi-search"></i></button>
-        </form>
+        <h1 class="display-4">ADD USER</h1>
+        <form class="form-inline">
+            <div class="row mt-2">
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="userID" class="input-group-text"><i class="bi bi-hash"></i></label>
+                    <input id="userID" type="text" class="form-control" size="25" placeholder="User ID" autocomplete="off" required />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="fname" class="input-group-text"><i class="bi bi-person"></i></label>
+                    <input id="fname" type="text" class="form-control" size="25" placeholder="First Name" autocomplete="off" required />
+                    <input id="lname" type="text" class="form-control" size="25" placeholder="Last Name" autocomplete="off" required />
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="email" class="input-group-text"><i class="bi bi-envelope"></i></label>
+                    <input id="email" type="text" class="form-control texthover" size="50" placeholder="Email" autocomplete="off" required />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="birthdate" class="input-group-text">Birthdate &nbsp;<i class="bi bi-calendar-plus"></i></label>
+                    <input id="birthdate" type="date" class="form-control texthover" max="2013-01-01" placeholder="Birthdate" autocomplete="off" required />
+                </div>
+            </div>
 
-        <table class="table mt-3 align-middle">
-            <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>User Type</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Citizenship</th>
-                    <th>Email Address</th>
-                    <th>Phone Number</th>
-                    <th>Organization</th>
-                    <th>Date of Birth</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider">
-                <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
-                    <tr id="<?= $row['uID'] ?>">
-                        <td><?= $row['uID'] ?></td>
-                        <td><?= $row['userType'] ?></td>
-                        <td><?= $row['fName'] ?></td>
-                        <td><?= $row['lName'] ?></td>
-                        <td><?= $row['citizenship'] ?></td>
-                        <td><?= $row['emailAddress'] ?></td>
-                        <td><?= $row['phoneNumber'] ?></td>
-                        <td><?= $row['organizationName'] ?></td>
-                        <td><?= $row['dateOfBirth'] ?></td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+            <div class="row">
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="phone" class="input-group-text"><i class="bi bi-phone"></i></label>
+                    <input id="phone" type="tel" class="form-control" size="20" placeholder="Phone Number" autocomplete="off" required />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="utype" class="input-group-text">User Type</label>
+                    <input id="utype" type="text" class="form-control" size="25" placeholder="Admin/Regular/Delegate" autocomplete="off" required />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="citizenship" class="input-group-text"><i class="bi bi-flag"></i></label>
+                    <input id="citizenship" type="text" class="form-control texthover" size="25" placeholder="Citizenship" autocomplete="off" required />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="organization" class="input-group-text"><i class="bi bi-building"></i></label>
+                    <input id="organization" type="text" class="form-control" size="25" placeholder="Organization" autocomplete="off" required />
+                </div>
+            </div>
+
+
+
+            <button type="submit" class="btn btn-outline-dark mt-3" id="submit">
+                Edit User!
+            </button>
+        </form>
     </div>
 
 

@@ -53,42 +53,21 @@ $db->execute();
     </nav>
 
     <div class="container pt-3">
-        <h1>Users:</h1>
-        <form class="d-flex pt-2" role="search">
-            <input id="searchID" class="form-control me-2 input-box" type="search" placeholder="Search User (By User ID)" aria-label="Search User">
-            <button id="searchUser" class="btn btn-outline-dark" type="button"><i class="bi bi-search"></i></button>
-        </form>
+        <h1 class="display-4">SUSPEND USER</h1>
+        <form class="form-inline">
+            <div class="row mt-2">
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="userid" class="input-group-text"><i class="bi bi-hash"></i></label>
+                    <input id="userid" type="text" class="form-control texthover" size="50" placeholder="User ID" autocomplete="off" required />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <button type="submit" class="btn btn-outline-dark   " id="submit">
+                        Suspend User!
+                    </button>
+                </div>
+            </div>
 
-        <table class="table mt-3 align-middle">
-            <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>User Type</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Citizenship</th>
-                    <th>Email Address</th>
-                    <th>Phone Number</th>
-                    <th>Organization</th>
-                    <th>Date of Birth</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider">
-                <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
-                    <tr id="<?= $row['uID'] ?>">
-                        <td><?= $row['uID'] ?></td>
-                        <td><?= $row['userType'] ?></td>
-                        <td><?= $row['fName'] ?></td>
-                        <td><?= $row['lName'] ?></td>
-                        <td><?= $row['citizenship'] ?></td>
-                        <td><?= $row['emailAddress'] ?></td>
-                        <td><?= $row['phoneNumber'] ?></td>
-                        <td><?= $row['organizationName'] ?></td>
-                        <td><?= $row['dateOfBirth'] ?></td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+        </form>
     </div>
 
 
