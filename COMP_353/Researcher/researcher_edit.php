@@ -1,13 +1,11 @@
-<?php
+<?php require_once '../database.php';
 // session_start();
 // if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
 //     header("Location: ../index.php");
 // }
-
-require_once '../database.php';
 $db = $conn->prepare('SELECT * FROM testdbms.article');
 $db->execute();
-if (isset($_POST['art-del-btn'])) {
+if (isset($_POST['art-edit-btn'])) {
     $artIDList = $conn->prepare('SELECT artID 
                                     FROM testdbms.article');
     $artIDList->execute();
@@ -16,10 +14,16 @@ if (isset($_POST['art-del-btn'])) {
         if ($_POST['artid'] == $row['artID'])
             $loop = false;
     if (!$loop) {
-        $user = $conn->prepare('DELETE FROM testdbms.article 
+        $article = $conn->prepare('UPDATE testdbms.article 
+                                SET majorTopic = :majorTop, minorTopic = :minorTop, summ =:summ, article = :article
                                 WHERE artID = :artid');
-        $user->bindParam(':artid', $_POST["artid"]);
-        $user->execute();
+        $article->bindParam(':artid', $_POST["artid"]);
+        $article->bindParam(':majorTop', $_POST["majorTop"]);
+        $article->bindParam(':minorTop', $_POST["minorTop"]);
+        $article->bindParam(':summ', $_POST["summ"]);
+        $article->bindParam(':article', $_POST["article"]);
+
+        $article->execute();
         header("Location: researcher.php");
     }
 }
@@ -58,13 +62,13 @@ if (isset($_POST['art-del-btn'])) {
                         <a class="navbar-name" aria-current="page" href="researcher_add.php">Add Articles <i class="bi bi-plus-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="researcher_edit.php">Edit Articles <i class="bi bi-pencil-square"></i></a>
+                        <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="researcher_edit.php">Edit Articles <i class="bi bi-pencil-square"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
+                        <a class="navbar-name" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="../logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+                        <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
                     </li>
                 </ul>
             </div>
@@ -72,20 +76,44 @@ if (isset($_POST['art-del-btn'])) {
     </nav>
 
     <div class="container pt-3">
-        <h1 class="display-4">DELETE ARTICLES</h1>
-        <form class="form-inline" action="researcher_delete.php" method="POST">
+        <h1 class="display-4">EDIT ARTICLE</h1>
+        <form class="form-inline" action="researcher_edit.php" method="POST">
             <div class="row mt-2">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="artid" class="input-group-text"><i class="bi bi-hash"></i></label>
                     <input id="artid" type="number" name="artid" class="form-control texthover" size="50" placeholder="Article ID" autocomplete="off" required />
                 </div>
-                <div class="input-group col-lg mt-2 my-md-none">
-                    <button type="submit" class="btn btn-outline-dark" name="art-del-btn">
-                        Delete!
-                    </button>
+            </div>
+            <div class="row mt-2">
+                <label for="majorTop" class="col-form-label mt-2">Major Topic:</label>
+                <div class="input-group col-lg my-md-none">
+                    <textarea id="majorTop" name="majorTop" type="text" class="form-control" rows="2" autocomplete="off" required></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <label for="minorTop" class="col-form-label  mt-2">Minor Topic:</label>
+                <div class="input-group col-lg my-md-none">
+                    <textarea id="minorTop" name="minorTop" type="text" class="form-control" rows="2" autocomplete="off" required></textarea>
                 </div>
             </div>
 
+            <div class="row">
+                <label for="summ" class="col-form-label mt-2">Summary:</label>
+                <div class="input-group col-lg my-md-none">
+                    <textarea id="summ" name="summ" type="text" class="form-control texthover" maxlength="100" rows="3" autocomplete="off" required></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="article" class="col-form-label mt-2">Article:</label>
+                <div class="input-group col-lg my-md-none">
+                    <textarea id="article" name="article" type="text" class="form-control texthover" rows="6" autocomplete="off" required></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-outline-dark my-3" name="art-edit-btn" id="submit">
+                Edit Article!
+            </button>
         </form>
     </div>
 

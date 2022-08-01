@@ -1,6 +1,31 @@
-<?php require_once '../database.php';
-$db = $conn->prepare('SELECT * FROM testdbms.user AS users');
-$db->execute();
+<?php
+// session_start();
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+//     header("Location: ../index.php");
+// }
+
+require_once '../database.php';
+if (isset($_POST["suspendbtn"])) {
+    $idlist = $conn->prepare('SELECT uID, userType 
+                                FROM testdbms.user');
+    $idlist->execute();
+    $loop = false;
+    while ($loop && $row = $idlist->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
+        if (strcmp($_POST['userid'], $row['uID']) == 0 && strcmp($row['userType'], "Admin") != 0) {
+            $loop = true;
+        }
+    }
+    if ($loop) {
+        $user = $conn->prepare('UPDATE testdbms.user 
+                                SET status = "suspended"
+                                WHERE uID = :userid;');
+
+        $user->bindParam(':userid', $_POST["userid"]);
+
+        $user->execute();
+        header("Location: admin.php");
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +70,7 @@ $db->execute();
                         <a class="navbar-name" aria-current="page" href="../sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+                        <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
                     </li>
                 </ul>
             </div>
@@ -54,24 +79,21 @@ $db->execute();
 
     <div class="container pt-3">
         <h1 class="display-4">SUSPEND USER</h1>
-        <form class="form-inline">
+        <form class="form-inline" action="admin_suspend.php" method="POST">
             <div class="row mt-2">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="userid" class="input-group-text"><i class="bi bi-hash"></i></label>
-                    <input id="userid" type="text" class="form-control texthover" size="50" placeholder="User ID" autocomplete="off" required />
+                    <input id="userid" type="number" class="form-control texthover" size="50" placeholder="User ID" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
-                    <button type="submit" class="btn btn-outline-dark   " id="submit">
+                    <button type="submit" class="btn btn-outline-dark" name="suspendbtn" id="submit">
                         Suspend User!
                     </button>
                 </div>
             </div>
-
         </form>
     </div>
 
-
-    <script src="../index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </body>
 

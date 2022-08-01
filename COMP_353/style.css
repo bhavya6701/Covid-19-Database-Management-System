@@ -1,3 +1,17 @@
+.background {
+	z-index: -1;
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	opacity: 0.7;
+	background-image: url("login-background.jpg");
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+}
+
 .navbar-organization {
 	color: white !important;
 }
@@ -14,4 +28,9 @@
 
 .input-box {
 	width: 20rem !important;
+}
+
+.btn-login {
+	text-align: center;
+	width: 100px !important;
 }

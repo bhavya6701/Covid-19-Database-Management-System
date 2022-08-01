@@ -1,5 +1,11 @@
-<?php require_once '../database.php';
-$db = $conn->prepare('SELECT * FROM testdbms.user AS users');
+<?php
+// session_start();
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+//   header("Location: ../index.php");
+// }
+
+require_once '../database.php';
+$db = $conn->prepare('SELECT * FROM testdbms.user');
 $db->execute();
 ?>
 
@@ -45,7 +51,7 @@ $db->execute();
             <a class="navbar-name" aria-current="page" href="../sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
           </li>
           <li class="nav-item ps-5">
-            <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+            <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
           </li>
         </ul>
       </div>
@@ -61,7 +67,7 @@ $db->execute();
 
     <table class="table table-bordered my-4 align-middle">
       <thead>
-        <tr>
+        <tr class="text-center">
           <th>User ID</th>
           <th>User Type</th>
           <th>First Name</th>
@@ -75,7 +81,7 @@ $db->execute();
       </thead>
       <tbody class="table-group-divider">
         <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
-          <tr id="<?= $row['uID'] ?>">
+          <tr class="text-center" id="<?= $row['uID'] ?>">
             <td><?= $row['uID'] ?></td>
             <td><?= $row['userType'] ?></td>
             <td><?= $row['fName'] ?></td>
@@ -91,8 +97,7 @@ $db->execute();
     </table>
   </div>
 
-
-  <script src="../index.js"></script>
+  <script src="admin.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </body>
 

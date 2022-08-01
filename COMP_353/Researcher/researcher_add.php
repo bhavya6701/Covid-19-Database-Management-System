@@ -1,4 +1,10 @@
-<?php require_once '../database.php';
+<?php
+// session_start();
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+//     header("Location: ../index.php");
+// }
+
+require_once '../database.php';
 $db = $conn->prepare('SELECT MAX(artID) FROM testdbms.article');
 $db->execute();
 $newrow = ($db->fetch())[0] + 1;
@@ -70,7 +76,7 @@ if (isset($_POST['art-sub-btn'])) {
                         <a class="navbar-name" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+                        <a class="navbar-name" aria-current="page" href="../logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
                     </li>
                 </ul>
             </div>

@@ -1,18 +1,23 @@
-<?php require_once '../database.php';
-$db = $conn->prepare('SELECT MAX(uID) FROM testdbms.user AS addid');
+<?php
+// session_start();
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+//     header("Location: ../index.php");
+// }
+
+require_once '../database.php';
+$db = $conn->prepare('SELECT MAX(uID) FROM testdbms.user');
 $db->execute();
 $newrow = ($db->fetch())[0] + 1;
 
-if (
-    isset($_POST["fname"]) && isset($_POST["lname"]) && isset($_POST["email"]) && isset($_POST["birthdate"])
-    && isset($_POST["phone"]) && isset($_POST["utype"]) && isset($_POST["citizenship"]) && isset($_POST["organization"])
-) {
+if (isset($_POST["addbtn"])) {
     $emailList = $conn->prepare('SELECT emailAddress 
                                 FROM testdbms.user');
+    $emailList->execute();
     $loop = true;
     while ($loop && $row = $emailList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
-        if (strcmp($_POST['email'], $row['emailAddress'])) {
+        if (strcmp($_POST['email'], $row['emailAddress']) == 0) {
             $loop = false;
+            break;
         }
     }
     if ($loop) {
@@ -33,8 +38,6 @@ if (
         header("Location: admin.php");
     }
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -79,7 +82,7 @@ if (
                         <a class="navbar-name" aria-current="page" href="../sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+                        <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
                     </li>
                 </ul>
             </div>
@@ -115,7 +118,12 @@ if (
             <div class="row">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="utype" class="input-group-text">User Type</label>
-                    <input id="utype" name="utype" type="text" class="form-control" size="25" placeholder="Admin/Regular/Delegate" autocomplete="off" required />
+                    <select class="form-select d-none d-sm-inline" name="utype" id="utype">
+                        <option value="Regular">Regular</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Researcher">Researcher</option>
+                        <option value="Delegate">Delegate</option>
+                    </select>
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="citizenship" class="input-group-text"><i class="bi bi-flag"></i></label>
@@ -128,13 +136,12 @@ if (
                 <input id="organization" name="organization" type="text" class="form-control" size="25" placeholder="Organization" autocomplete="off" />
             </div>
 
-            <button type="submit" class="btn btn-outline-dark mt-3" id="submit">
+            <button type="submit" class="btn btn-outline-dark mt-3" name="addbtn" id="submit">
                 Add User!
             </button>
         </form>
     </div>
 
-    <script src="../index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </body>
 

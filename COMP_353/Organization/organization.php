@@ -1,3 +1,11 @@
+<?php
+// session_start();
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+//   header("Location: ../index.php");
+// }
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,45 +34,22 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
           <li class="nav-item ps-5">
-            <a class="navbar-name" aria-current="page" href="Login/login.php">Login <i class="bi bi-person-circle"></i></a>
+            <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
           </li>
           <li class="nav-item ps-5">
-            <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="../COMP_353/sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
+            <a class="navbar-name" aria-current="page" href="../sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
   <div class="container pt-3">
-    <h1 class="display-5">Author Subscription</h1>
-
+    <h1>Users:</h1>
     <form class="d-flex pt-2" role="search">
-      <input id="emailID" class="form-control me-2 input-box" type="search" placeholder="Email to receive notification" aria-label="Search User">
-      <button id="btnEmail" name="btnEmail" class="btn btn-outline-dark" type="button"><i class="bi bi-search"></i></button>
+      <input class="form-control me-2 input-box   " type="search" placeholder="Search User" aria-label="Search User">
+      <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i></button>
     </form>
 
-    <h1 class="display-6 pt-3">Authors:</h1>
-    <form action="sub_author"></form>
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-      <label class="form-check-label" for="flexCheckDefault">
-        Default checkbox
-      </label>
-    </div>
-
-    <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
-      <tr class="text-center" id="<?= $row['uID'] ?>">
-        <td><?= $row['uID'] ?></td>
-        <td><?= $row['userType'] ?></td>
-        <td><?= $row['fName'] ?></td>
-        <td><?= $row['lName'] ?></td>
-        <td><?= $row['citizenship'] ?></td>
-        <td><?= $row['emailAddress'] ?></td>
-        <td><?= $row['phoneNumber'] ?></td>
-        <td><?= $row['organizationName'] ?></td>
-        <td><?= $row['dateOfBirth'] ?></td>
-      </tr>
-    <?php } ?>
 
   </div>
 

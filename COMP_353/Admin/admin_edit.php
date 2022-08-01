@@ -1,6 +1,39 @@
-<?php require_once '../database.php';
-$db = $conn->prepare('SELECT * FROM testdbms.user AS users');
-$db->execute();
+<?php
+// session_start();
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+//     header("Location: ../index.php");
+// }
+
+require_once '../database.php';
+if (isset($_POST["editbtn"])) {
+    $idlist = $conn->prepare('SELECT uID 
+                            FROM testdbms.user');
+    $idlist->execute();
+    $loop = true;
+    while ($loop && $row = $idlist->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
+        if ($_POST['userid'] == $row['uID']) {
+            $loop = false;
+        }
+    }
+    if ($loop) {
+        $user = $conn->prepare('UPDATE testdbms.user 
+                                SET userType = :utype, fName = :fname, lname = :lname, citizenship = :citizenship, emailAddress = :email, phoneNumber = :phone, organizationName = :organization, dateOfBirth = :birthdate
+                                WHERE uID = :userid;');
+
+        $user->bindParam(':userid', $_POST["userid"]);
+        $user->bindParam(':utype', $_POST["utype"]);
+        $user->bindParam(':fname', $_POST["fname"]);
+        $user->bindParam(':lname', $_POST["lname"]);
+        $user->bindParam(':citizenship', $_POST["citizenship"]);
+        $user->bindParam(':email', $_POST["email"]);
+        $user->bindParam(':phone', $_POST["phone"]);
+        $user->bindParam(':organization', $_POST["organization"]);
+        $user->bindParam(':birthdate', $_POST["birthdate"]);
+
+        $user->execute();
+        header("Location: admin.php");
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +78,7 @@ $db->execute();
                         <a class="navbar-name" aria-current="page" href="../sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+                        <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
                     </li>
                 </ul>
             </div>
@@ -53,62 +86,64 @@ $db->execute();
     </nav>
 
     <div class="container pt-3">
-        <h1 class="display-4">ADD USER</h1>
-        <form class="form-inline">
+        <h1 class="display-4">EDIT USER</h1>
+        <form class="form-inline" action="admin_edit.php" method="POST">
             <div class="row mt-2">
                 <div class="input-group col-lg mt-2 my-md-none">
-                    <label for="userID" class="input-group-text"><i class="bi bi-hash"></i></label>
-                    <input id="userID" type="text" class="form-control" size="25" placeholder="User ID" autocomplete="off" required />
+                    <label for="userid" class="input-group-text"><i class="bi bi-hash"></i></label>
+                    <input id="userid" name="userid" type="number" class="form-control" size="25" placeholder="User ID" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="fname" class="input-group-text"><i class="bi bi-person"></i></label>
-                    <input id="fname" type="text" class="form-control" size="25" placeholder="First Name" autocomplete="off" required />
-                    <input id="lname" type="text" class="form-control" size="25" placeholder="Last Name" autocomplete="off" required />
+                    <input id="fname" name="fname" type="text" class="form-control" size="25" placeholder="First Name" autocomplete="off" required />
+                    <input id="lname" name="lname" type="text" class="form-control" size="25" placeholder="Last Name" autocomplete="off" required />
                 </div>
             </div>
             <div class="row">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="email" class="input-group-text"><i class="bi bi-envelope"></i></label>
-                    <input id="email" type="text" class="form-control texthover" size="50" placeholder="Email" autocomplete="off" required />
+                    <input id="email" name="email" type="text" class="form-control texthover" size="50" placeholder="Email" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="birthdate" class="input-group-text">Birthdate &nbsp;<i class="bi bi-calendar-plus"></i></label>
-                    <input id="birthdate" type="date" class="form-control texthover" max="2013-01-01" placeholder="Birthdate" autocomplete="off" required />
+                    <input id="birthdate" name="birthdate" type="date" class="form-control texthover" max="2013-01-01" placeholder="Birthdate" autocomplete="off" required />
                 </div>
             </div>
 
             <div class="row">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="phone" class="input-group-text"><i class="bi bi-phone"></i></label>
-                    <input id="phone" type="tel" class="form-control" size="20" placeholder="Phone Number" autocomplete="off" required />
+                    <input id="phone" name="phone" type="tel" class="form-control" size="20" placeholder="Phone Number" autocomplete="off" required />
                 </div>
+
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="utype" class="input-group-text">User Type</label>
-                    <input id="utype" type="text" class="form-control" size="25" placeholder="Admin/Regular/Delegate" autocomplete="off" required />
+                    <select class="form-select d-none d-sm-inline" name="utype" id="utype">
+                        <option value="Regular">Regular</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Researcher">Researcher</option>
+                        <option value="Delegate">Delegate</option>
+                    </select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="citizenship" class="input-group-text"><i class="bi bi-flag"></i></label>
-                    <input id="citizenship" type="text" class="form-control texthover" size="25" placeholder="Citizenship" autocomplete="off" required />
+                    <input id="citizenship" name="citizenship" type="text" class="form-control texthover" size="25" placeholder="Citizenship" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="organization" class="input-group-text"><i class="bi bi-building"></i></label>
-                    <input id="organization" type="text" class="form-control" size="25" placeholder="Organization" autocomplete="off" required />
+                    <input id="organization" name="organization" type="text" class="form-control" size="25" placeholder="Organization" autocomplete="off" />
                 </div>
             </div>
 
-
-
-            <button type="submit" class="btn btn-outline-dark mt-3" id="submit">
+            <button type="submit" class="btn btn-outline-dark mt-3" name="editbtn" id="submit">
                 Edit User!
             </button>
         </form>
     </div>
 
-
-    <script src="../index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </body>
 
