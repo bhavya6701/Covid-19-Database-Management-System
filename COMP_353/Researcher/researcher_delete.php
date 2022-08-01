@@ -9,9 +9,9 @@ if (isset($_POST['art-del-btn'])) {
     while ($loop && $row = $artIDList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
         if ($_POST['artid'] == $row['artID'])
             $loop = false;
-    if ($loop) {
+    if (!$loop) {
         $user = $conn->prepare('DELETE FROM testdbms.article 
-                                WHERE(:artid)');
+                                WHERE artID = :artid');
         $user->bindParam(':artid', $_POST["artid"]);
         $user->execute();
         header("Location: researcher.php");
@@ -67,11 +67,11 @@ if (isset($_POST['art-del-btn'])) {
 
     <div class="container pt-3">
         <h1 class="display-4">DELETE ARTICLES</h1>
-        <form class="form-inline">
+        <form class="form-inline" action="researcher_delete.php" method="POST">
             <div class="row mt-2">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="artid" class="input-group-text"><i class="bi bi-hash"></i></label>
-                    <input id="artid" type="number" class="form-control texthover" size="50" placeholder="Article ID" autocomplete="off" required />
+                    <input id="artid" type="number" name="artid" class="form-control texthover" size="50" placeholder="Article ID" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <button type="submit" class="btn btn-outline-dark" name="art-del-btn">
@@ -83,8 +83,6 @@ if (isset($_POST['art-del-btn'])) {
         </form>
     </div>
 
-
-    <script src="../index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </body>
 
