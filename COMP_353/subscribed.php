@@ -1,3 +1,28 @@
+<?php
+require_once 'database.php';
+$user_id;
+if (isset($_GET['emailID'])) {
+    $db = $conn->prepare('SELECT uID FROM testdbms.user WHERE emailAddress = :email');
+    $db->bindParam(':email', $_GET['emailID']);
+    $db->execute();
+    $user_id = $db->fetchColumn();
+    if ($user_id == null) {
+        header("Location: regular_user.php");
+    } else {
+    }
+}
+if (isset($_GET['auth'])) {
+    $author = $_GET['auth'];
+    foreach ($author as $authID) {
+        $db = $conn->prepare('INSERT INTO Author_Subs VALUES(:authID, :userID)');
+        $db->bindParam(':authID', $authID);
+        $db->bindParam(':userID', $user_id);
+        $db->execute();
+    }
+} else {
+    header("Location: regular_user.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,17 +54,17 @@
                         <a class="navbar-name" aria-current="page" href="Login/login.php">Login <i class="bi bi-person-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="../COMP_353/sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
+                        <a class="navbar-name" style="color: white !important;" aria-current="page" href="../COMP_353/sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container pt-3">
-        <h1 class="display-6 pt-3">Authors Subscribed! :)</h1>
+    <div class="container pt-5 w-50 text-center">
+        <h1 class="display-5 pt-3">Subscription Successful! <i class="bi bi-emoji-smile"></i></h1>
+        <h2 class="Lead pt-3">You will receive notification to the given email address whenever there is a new article published by the author/s subscribed.</h2>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </body>
 

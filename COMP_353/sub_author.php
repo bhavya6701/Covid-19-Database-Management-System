@@ -1,3 +1,9 @@
+<?php
+require_once 'database.php';
+$db = $conn->prepare('SELECT * FROM testdbms.author');
+$db->execute();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,39 +42,28 @@
     </div>
   </nav>
   <div class="container pt-3">
-    <h1 class="display-5">Author Subscription</h1>
+    <h1 class="display-5">Receive Email Notification</h1>
 
-    <form class="d-flex pt-2" role="search">
-      <input id="emailID" class="form-control me-2 input-box" type="search" placeholder="Email to receive notification" aria-label="Search User">
-      <button id="btnEmail" name="btnEmail" class="btn btn-outline-dark" type="button"><i class="bi bi-search"></i></button>
+    <form class="pt-2" action="subscribed.php" method="GET">
+      <div class="row d-flex">
+        <div class="col d-flex">
+          <input id="emailID" name="emailID" class="form-control me-2 input-box" type="email" placeholder="abcd1234@email.com" required>
+          <button id="btnEmail" name="btnEmail" class="btn btn-outline-dark" type="submit"><i class="bi bi-forward-fill"></i></button>
+        </div>
+      </div>
+      <h1 class="display-6 pt-3">Authors:</h1>
+      <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
+        <div class="form-check py-2">
+          <input class="form-check-input" name="auth[]" type="checkbox" value="<?= $row['authID'] ?>" id="<?= $row['authID'] ?>">
+          <label class="form-check-label" for="<?= $row['authID'] ?>">
+            <!-- <?= $row['fName'] . " " . $row['lName'] ?> -->
+            <?= $row['authID'] ?>
+          </label>
+        </div>
+      <?php } ?>
+
     </form>
-
-    <h1 class="display-6 pt-3">Authors:</h1>
-    <form action="sub_author"></form>
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-      <label class="form-check-label" for="flexCheckDefault">
-        Default checkbox
-      </label>
-    </div>
-
-    <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
-      <tr class="text-center" id="<?= $row['uID'] ?>">
-        <td><?= $row['uID'] ?></td>
-        <td><?= $row['userType'] ?></td>
-        <td><?= $row['fName'] ?></td>
-        <td><?= $row['lName'] ?></td>
-        <td><?= $row['citizenship'] ?></td>
-        <td><?= $row['emailAddress'] ?></td>
-        <td><?= $row['phoneNumber'] ?></td>
-        <td><?= $row['organizationName'] ?></td>
-        <td><?= $row['dateOfBirth'] ?></td>
-      </tr>
-    <?php } ?>
-
   </div>
-
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </body>

@@ -48,7 +48,7 @@ $db->execute();
             <a class="navbar-name" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
           </li>
           <li class="nav-item ps-5">
-            <a class="navbar-name" aria-current="page" href="../logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+            <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
           </li>
         </ul>
       </div>

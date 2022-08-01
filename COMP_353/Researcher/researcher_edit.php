@@ -15,7 +15,7 @@ if (isset($_POST['art-edit-btn'])) {
             $loop = false;
     if (!$loop) {
         $article = $conn->prepare('UPDATE testdbms.article 
-                                SET majorTopic = :majorTop, minorTopic = :minorTop, summ =:summ, article = :article
+                                SET majorTopic = :majorTop, minorTopic = :minorTop, summary =:summ, article = :article
                                 WHERE artID = :artid');
         $article->bindParam(':artid', $_POST["artid"]);
         $article->bindParam(':majorTop', $_POST["majorTop"]);
@@ -68,7 +68,7 @@ if (isset($_POST['art-edit-btn'])) {
                         <a class="navbar-name" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+                        <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
                     </li>
                 </ul>
             </div>
