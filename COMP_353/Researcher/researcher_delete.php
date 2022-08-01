@@ -1,34 +1,22 @@
 <?php require_once '../database.php';
-$db = $conn->prepare('SELECT MAX(artID) FROM testdbms.article');
+$db = $conn->prepare('SELECT * FROM testdbms.article');
 $db->execute();
-$newrow = ($db->fetch())[0] + 1;
-
-if (isset($_POST['art-sub-btn'])) {
-    $summaryList = $conn->prepare('SELECT summary 
+if (isset($_POST['art-del-btn'])) {
+    $artIDList = $conn->prepare('SELECT artID 
                                     FROM testdbms.article');
-    $summaryList->execute();
+    $artIDList->execute();
     $loop = true;
-    while ($loop && $row = $summaryList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
-        if (strcmp($_POST['summ'], $row['summary']) == 0)
+    while ($loop && $row = $artIDList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
+        if ($_POST['artid'] == $row['artID'])
             $loop = false;
     if ($loop) {
-        $user = $conn->prepare('INSERT INTO testdbms.article 
-                                VALUES(:articleID, :pubDate, :majorTop, :minorTop, :summ, :article, :authid)');
-        $date = date("Y-m-d");
-        $user->bindParam(':articleID', $newrow);
-        $user->bindParam(':pubDate', $date);
-        $user->bindParam(':majorTop', $_POST["majorTop"]);
-        $user->bindParam(':minorTop', $_POST["minorTop"]);
-        $user->bindParam(':summ', $_POST["summ"]);
-        $user->bindParam(':article', $_POST["article"]);
-        // $user->bindParam(':authtype', $_POST["authtype"]);
-        $user->bindParam(':authid', $_POST["authid"]);
-
+        $user = $conn->prepare('DELETE FROM testdbms.article 
+                                WHERE(:artid)');
+        $user->bindParam(':artid', $_POST["artid"]);
         $user->execute();
         header("Location: researcher.php");
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -61,13 +49,13 @@ if (isset($_POST['art-sub-btn'])) {
                         <a class="navbar-name" aria-current="page" href="researcher.php">My Articles <i class="bi bi-journal-text"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="researcher_add.php">Add Articles <i class="bi bi-plus-circle"></i></a>
+                        <a class="navbar-name" aria-current="page" href="researcher_add.php">Add Articles <i class="bi bi-plus-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
                         <a class="navbar-name" aria-current="page" href="researcher_edit.php">Edit Articles <i class="bi bi-pencil-square"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
+                        <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
                         <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
@@ -78,41 +66,25 @@ if (isset($_POST['art-sub-btn'])) {
     </nav>
 
     <div class="container pt-3">
-        <h1 class="display-4">ADD ARTICLE</h1>
-        <form class="form-inline" action="researcher_add.php" method="POST">
+        <h1 class="display-4">DELETE ARTICLES</h1>
+        <form class="form-inline">
             <div class="row mt-2">
-                <label for="majorTop" class="col-form-label mt-2">Major Topic:</label>
-                <div class="input-group col-lg my-md-none">
-                    <textarea id="majorTop" name="majorTop" type="text" class="form-control" rows="2" autocomplete="off" required></textarea>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="artid" class="input-group-text"><i class="bi bi-hash"></i></label>
+                    <input id="artid" type="number" class="form-control texthover" size="50" placeholder="Article ID" autocomplete="off" required />
                 </div>
-            </div>
-            <div class="row">
-                <label for="minorTop" class="col-form-label  mt-2">Minor Topic:</label>
-                <div class="input-group col-lg my-md-none">
-                    <textarea id="minorTop" name="minorTop" type="text" class="form-control" rows="2" autocomplete="off" required></textarea>
-                </div>
-            </div>
-
-            <div class="row">
-                <label for="summ" class="col-form-label mt-2">Summary:</label>
-                <div class="input-group col-lg my-md-none">
-                    <textarea id="summ" name="summ" type="text" class="form-control texthover" maxlength="100" rows="3" autocomplete="off" required></textarea>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <button type="submit" class="btn btn-outline-dark" name="art-del-btn">
+                        Delete Article!
+                    </button>
                 </div>
             </div>
 
-            <div class="row">
-                <label for="article" class="col-form-label mt-2">Article:</label>
-                <div class="input-group col-lg my-md-none">
-                    <textarea id="article" name="article" type="text" class="form-control texthover" rows="6" autocomplete="off" required></textarea>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-outline-dark my-3" name="art-sub-btn" id="submit">
-                Add Article!
-            </button>
         </form>
     </div>
 
+
+    <script src="../index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 </body>
 

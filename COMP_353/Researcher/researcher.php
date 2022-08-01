@@ -1,4 +1,9 @@
-<?php require_once '../database.php';
+<?php
+session_start();
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == false) {
+    header("Location: ../index.php");
+}
+require_once '../database.php';
 $db = $conn->prepare('SELECT * FROM testdbms.article');
 $db->execute();
 ?>
@@ -30,16 +35,16 @@ $db->execute();
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="admin.php">My Articles <i class="bi bi-journal-text"></i></a>
+                        <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="researcher.php">My Articles <i class="bi bi-journal-text"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="admin_add.php">Add Articles <i class="bi bi-plus-circle"></i></a>
+                        <a class="navbar-name" aria-current="page" href="researcher_add.php">Add Articles <i class="bi bi-plus-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="admin_edit.php">Edit Articles <i class="bi bi-pencil-square"></i></a>
+                        <a class="navbar-name" aria-current="page" href="researcher_edit.php">Edit Articles <i class="bi bi-pencil-square"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="admin_suspend.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
+                        <a class="navbar-name" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
                         <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
