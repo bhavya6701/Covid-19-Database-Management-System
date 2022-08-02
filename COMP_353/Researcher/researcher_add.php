@@ -18,6 +18,17 @@ if (isset($_POST['art-sub-btn'])) {
         if (strcmp($_POST['summ'], $row['summary']) == 0)
             $loop = false;
     if ($loop) {
+        $query = $conn->prepare('SELECT COUNT(*) 
+                                    FROM evc353_1.Organization
+                                    WHERE delegateUID = :userID');
+        $query->bindParam(":userID", $_SESSION["uID"]);
+        $query->execute();
+        $uType = $query->fetchColumn();
+        $userType = "Researcher";
+        if ($uType == 1) {
+            $userType = "Organization";
+        }
+
         $db = $conn->prepare('SELECT authID 
                                 FROM evc353_1.Author, evc353_1.Researcher
                                 WHERE Author.rID = Researcher.rID AND Researcher.uID = :userID');
@@ -25,7 +36,7 @@ if (isset($_POST['art-sub-btn'])) {
         $db->execute();
         $row = $db->fetchColumn();
         $article = $conn->prepare('INSERT INTO evc353_1.Article 
-                                VALUES(:articleID, :pubDate, :majorTop, :minorTop, :summ, :article, "Researcher", :authid, "displayed", null)');
+                                VALUES(:articleID, :pubDate, :majorTop, :minorTop, :summ, :article, :utype, :authid, "displayed", null)');
         $date = date("Y-m-d");
         $article->bindParam(':articleID', $newrow);
         $article->bindParam(':pubDate', $date);
@@ -33,6 +44,7 @@ if (isset($_POST['art-sub-btn'])) {
         $article->bindParam(':minorTop', $_POST["minorTop"]);
         $article->bindParam(':summ', $_POST["summ"]);
         $article->bindParam(':article', $_POST["article"]);
+        $article->bindParam(':utype', $userType);
         $article->bindParam(':authid', $row);
 
         $article->execute();
@@ -44,15 +56,6 @@ if (isset($_POST['art-sub-btn'])) {
                                                         WHERE Researcher.rID = Author.rID AND Author.authID = Author_Subs.authID)');
         $emailList->execute();
 
-        $rName = $conn->prepare('SELECT User.fName, User.lName 
-                                            FROM evc353_1.User, evc353_1.Researcher
-                                            WHERE User.uID = Researcher.uID AND Researcher.rID = Researcher.rID');
-        $rName->execute();
-
-        $researcherName = "";
-        while ($row = $rName->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
-            $researcherName .= $row['fName'] . " " . $row['lName'];
-
         $to = "";
         while ($row = $emailList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
             $to .= $row['emailAddress'] . ",";
@@ -60,11 +63,47 @@ if (isset($_POST['art-sub-btn'])) {
         if (strlen($to) > 0)
             substr($to, 0, strlen($to) - 1);
 
-        $subject = "New Article Added1";
+        $rName = $conn->prepare('SELECT CONCAT(User.fName," ", User.lName) AS rName
+                                            FROM evc353_1.User, evc353_1.Researcher
+                                            WHERE User.uID = Researcher.uID AND Researcher.rID = Researcher.rID');
+        $rName->execute();
+        $researcherName = $rName->fetchColumn();
+
+        $subject = "New Article Added";
         $txt = "Check out the new article added by the researcher " . $researcherName . ".";
         $headers = "From: bhavyaruparelia@gmail.com";
 
         mail($to, $subject, $txt, $headers);
+
+        $UIDList = $conn->prepare('SELECT uID 
+                                    FROM evc353_1.User
+                                    WHERE User.uID IN (SELECT Author_Subs.uID 
+                                                        FROM evc353_1.Author_Subs, evc353_1.Researcher, evc353_1.Author
+                                                        WHERE Researcher.rID = Author.rID AND Author.authID = Author_Subs.authID)');
+        $UIDList->execute();
+
+        if ($uType == 1) {
+            $oName = $conn->prepare('SELECT organizationName 
+                                        FROM evc353_1.User
+                                        WHERE User.uID = $_SESSION["uID"]');
+            $oName->execute();
+            $orgName = $oName->fetchColumn();
+            $researcherName = "[" . $orgName . "]";
+        } else {
+            $researcherName = "[" . $researcherName . "]";
+        }
+
+        $subject = $researcherName . " " . $_POST["majorTop"];
+
+        while ($tuple = $UIDList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
+            $sentEmail = $conn->prepare('INSERT INTO evc353_1.Sent_Emails 
+                                            VALUES(":artid, :curDate, :receiverUid, :sub)');
+            $date = date("Y-m-d") . " " . date("H:i:sa");
+            $sentEmail->bindParam(':artid', $newrow);
+            $sentEmail->bindParam(':curDate', $date);
+            $sentEmail->bindParam(':receiverUid', $tuple["uID"]);
+            $sentEmail->bindParam(':sub', $subject);
+        }
 
         header("Location: researcher.php");
     }

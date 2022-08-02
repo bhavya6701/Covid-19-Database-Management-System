@@ -80,7 +80,7 @@ if (isset($_POST['art-edit-btn'])) {
     </nav>
 
     <div class="container pt-3">
-        <h1 class="display-4">EDIT ARTICLE</h1>
+        <h1 class="display-4">EDIT AN ARTICLE</h1>
         <form class="form-inline" action="researcher_edit.php" method="POST">
             <div class="row mt-2">
                 <div class="input-group col-lg mt-2 my-md-none">

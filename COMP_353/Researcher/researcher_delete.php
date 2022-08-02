@@ -74,7 +74,7 @@ if (isset($_POST['art-del-btn'])) {
     </nav>
 
     <div class="container pt-3">
-        <h1 class="display-4">DELETE ARTICLES</h1>
+        <h1 class="display-4">DELETE AN ARTICLE</h1>
         <form class="form-inline" action="researcher_delete.php" method="POST">
             <div class="row mt-2">
                 <div class="input-group col-lg mt-2 my-md-none">
