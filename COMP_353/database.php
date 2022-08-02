@@ -1,9 +1,9 @@
 
 <?php
-$server = 'localhost';
-$username = 'root';
-$password = 'Bhavyaraj10';
-$database = 'testdbms';
+$server = 'evc353.encs.concordia.ca';
+$username = 'evc353_1';
+$password = 'BR_DV_AG';
+$database = 'evc353_1';
 
 try {
     $conn = new PDO("mysql:host=$server;dbname=$database;", $username, $password);

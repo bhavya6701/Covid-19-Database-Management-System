@@ -1,6 +1,17 @@
 <?php require_once 'database.php';
 
-$db = $conn->prepare('SELECT * FROM testdbms.user');
+$db = $conn->prepare('SELECT
+CASE WHEN a.authType = "Researcher" THEN (
+  SELECT CONCAT(fName, " ", lName)
+  FROM User, Researcher, Author
+  WHERE a.authID = Author.authID AND Author.rID = Researcher.rID AND Researcher.uID = User.uID)
+  WHEN a.authType = "Organization" THEN (
+  SELECT organizationName
+  FROM Organization org, Author
+  WHERE a.authID = Author.authID AND Author.oID = org.oID
+) END AS author, publicationDate, majorTopic, minorTopic, summary, article
+FROM Article a
+ORDER BY publicationDate ASC');
 // $db->execute();
 ?>
 
@@ -64,22 +75,18 @@ $db = $conn->prepare('SELECT * FROM testdbms.user');
                     <th>Minor Topic</th>
                     <th>Summary</th>
                     <th>Article</th>
-                    <th>Author Type</th>
-                    <th>Author Infected</th>
-                    <th>Vaccinated Deaths</th>
+                    <th>Author</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
                 <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
                     <tr class="text-center" id="<?= $row['prostater'] ?>">
-                        <td><?= $row['cName'] ?></td>
-                        <td><?= $row['rName'] ?></td>
-                        <td><?= $row['agencyName'] ?></td>
-                        <td><?= $row['population'] ?></td>
-                        <td><?= $row['vaccPopulation'] ?></td>
-                        <td><?= $row['deaths'] ?></td>
-                        <td><?= $row['unvaccInfected'] ?></td>
-                        <td><?= $row['vacc_Died'] ?></td>
+                        <td><?= $row['publicationDate'] ?></td>
+                        <td><?= $row['majorTopic'] ?></td>
+                        <td><?= $row['minorTopic'] ?></td>
+                        <td><?= $row['summary'] ?></td>
+                        <td><?= $row['article'] ?></td>
+                        <td><?= $row['author'] ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
