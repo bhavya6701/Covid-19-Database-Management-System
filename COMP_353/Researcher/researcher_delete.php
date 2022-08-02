@@ -5,8 +5,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
 }
 
 require_once '../database.php';
-$db = $conn->prepare('SELECT * FROM evc353_1.Article');
-$db->execute();
+
 if (isset($_POST['art-del-btn'])) {
     $artIDList = $conn->prepare('SELECT artID 
                                     FROM evc353_1.Article, evc353_1.Author, evc353_1.Researcher

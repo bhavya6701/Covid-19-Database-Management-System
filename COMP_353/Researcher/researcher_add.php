@@ -28,7 +28,6 @@ if (isset($_POST['art-sub-btn'])) {
         if ($uType == 1) {
             $userType = "Organization";
         }
-
         $db = $conn->prepare('SELECT authID 
                                 FROM evc353_1.Author, evc353_1.Researcher
                                 WHERE Author.rID = Researcher.rID AND Researcher.uID = :userID');
