@@ -1,42 +1,3 @@
-<?php
-// session_start();
-// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
-//     header("Location: ../index.php");
-// }
-
-require_once '../database.php';
-$db = $conn->prepare('SELECT MAX(artID) FROM testdbms.article');
-$db->execute();
-$newrow = ($db->fetch())[0] + 1;
-
-if (isset($_POST['art-sub-btn'])) {
-    $summaryList = $conn->prepare('SELECT summary 
-                                    FROM testdbms.article');
-    $summaryList->execute();
-    $loop = true;
-    while ($loop && $row = $summaryList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
-        if (strcmp($_POST['summ'], $row['summary']) == 0)
-            $loop = false;
-    if ($loop) {
-        $user = $conn->prepare('INSERT INTO testdbms.article 
-                                VALUES(:articleID, :pubDate, :majorTop, :minorTop, :summ, :article, :authid)');
-        $date = date("Y-m-d");
-        $user->bindParam(':articleID', $newrow);
-        $user->bindParam(':pubDate', $date);
-        $user->bindParam(':majorTop', $_POST["majorTop"]);
-        $user->bindParam(':minorTop', $_POST["minorTop"]);
-        $user->bindParam(':summ', $_POST["summ"]);
-        $user->bindParam(':article', $_POST["article"]);
-        // $user->bindParam(':authtype', $_POST["authtype"]);
-        $user->bindParam(':authid', $_POST["authid"]);
-
-        $user->execute();
-        header("Location: researcher.php");
-    }
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,7 +37,7 @@ if (isset($_POST['art-sub-btn'])) {
                         <a class="navbar-name" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+                        <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
                     </li>
                 </ul>
             </div>
@@ -117,6 +78,69 @@ if (isset($_POST['art-sub-btn'])) {
                 Add Article!
             </button>
         </form>
+        <?php require_once '../database.php';
+        $db = $conn->prepare('SELECT MAX(artID) FROM testdbms.Article');
+        $db->execute();
+        $newrow = ($db->fetch())[0] + 1;
+
+        if (isset($_POST['art-sub-btn'])) {
+            $summaryList = $conn->prepare('SELECT summary 
+                                    FROM testdbms.Article');
+            $summaryList->execute();
+            $loop = true;
+            while ($loop && $row = $summaryList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
+                if (strcmp($_POST['summ'], $row['summary']) == 0)
+                    $loop = false;
+            if ($loop) {
+                $article = $conn->prepare('INSERT INTO testdbms.article 
+                                VALUES(:articleID, :pubDate, :majorTop, :minorTop, :summ, :article, :authid)');
+                $date = date("Y-m-d");
+                $article->bindParam(':articleID', $newrow);
+                $article->bindParam(':pubDate', $date);
+                $article->bindParam(':majorTop', $_POST["majorTop"]);
+                $article->bindParam(':minorTop', $_POST["minorTop"]);
+                $article->bindParam(':summ', $_POST["summ"]);
+                $article->bindParam(':article', $_POST["article"]);
+                // $article->bindParam(':authtype', $_POST["authtype"]);
+                $article->bindParam(':authid', $_POST["authid"]);
+
+                $article->execute();
+
+                //Check This
+                $emailList = $conn->prepare('SELECT emailAddress 
+                                    FROM testdbms.User
+                                    WHERE User.uID IN (SELECT Author_Subs.uID 
+                                                        FROM testdbms.Author_Subs, testdbms.Researcher, testdbms.Author
+                                                        WHERE Researcher.rID = Author.rID AND Author.authID = Author_Subs.authID)');
+                $emailList->execute();
+
+                // Check This
+                $rName = $conn->prepare('SELECT User.fName, User.lName 
+                                            FROM testdbms.User, testdbms.Researcher
+                                            WHERE User.uID = Researcher.uID AND Researcher.rID = Researcher.rID');
+                $rName->execute();
+
+                $researcherName = "";
+                while ($row = $rName->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
+                    $researcherName .= $row['fName'] . " " . $row['lName'];
+
+                $to = "";
+                while ($row = $emailList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
+                    $to .= $row['emailAddress'] . ",";
+
+                if (strlen($to) > 0)
+                    substr($to, 0, strlen($to) - 1);
+
+                $subject = "New Article Added1";
+                $txt = "Check out the new article added by the researcher " . $researcherName . ".";
+                $headers = "From: bhavyaruparelia@gmail.com";
+
+                mail($to, $subject, $txt, $headers);
+
+                header("Location: researcher.php");
+            }
+        }
+        ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>

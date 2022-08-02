@@ -1,20 +1,16 @@
 <?php require_once '../database.php';
-// session_start();
-// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
-//     header("Location: ../index.php");
-// }
-$db = $conn->prepare('SELECT * FROM testdbms.article');
+$db = $conn->prepare('SELECT * FROM testdbms.Article');
 $db->execute();
 if (isset($_POST['art-edit-btn'])) {
     $artIDList = $conn->prepare('SELECT artID 
-                                    FROM testdbms.article');
+                                    FROM testdbms.Article');
     $artIDList->execute();
     $loop = true;
     while ($loop && $row = $artIDList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
         if ($_POST['artid'] == $row['artID'])
             $loop = false;
     if (!$loop) {
-        $article = $conn->prepare('UPDATE testdbms.article 
+        $article = $conn->prepare('UPDATE testdbms.Article 
                                 SET majorTopic = :majorTop, minorTopic = :minorTop, summary =:summ, article = :article
                                 WHERE artID = :artid');
         $article->bindParam(':artid', $_POST["artid"]);
@@ -68,7 +64,7 @@ if (isset($_POST['art-edit-btn'])) {
                         <a class="navbar-name" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+                        <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
                     </li>
                 </ul>
             </div>

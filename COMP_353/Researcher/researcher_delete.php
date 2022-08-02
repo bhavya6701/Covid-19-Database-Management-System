@@ -1,25 +1,19 @@
-<?php
-// session_start();
-// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
-//     header("Location: ../index.php");
-// }
-
-require_once '../database.php';
-$db = $conn->prepare('SELECT * FROM testdbms.article');
+<?php require_once '../database.php';
+$db = $conn->prepare('SELECT * FROM testdbms.Article');
 $db->execute();
 if (isset($_POST['art-del-btn'])) {
     $artIDList = $conn->prepare('SELECT artID 
-                                    FROM testdbms.article');
+                                    FROM testdbms.Article');
     $artIDList->execute();
     $loop = true;
     while ($loop && $row = $artIDList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
         if ($_POST['artid'] == $row['artID'])
             $loop = false;
     if (!$loop) {
-        $user = $conn->prepare('DELETE FROM testdbms.article 
+        $article = $conn->prepare('DELETE FROM testdbms.Article 
                                 WHERE artID = :artid');
-        $user->bindParam(':artid', $_POST["artid"]);
-        $user->execute();
+        $article->bindParam(':artid', $_POST["artid"]);
+        $article->execute();
         header("Location: researcher.php");
     }
 }
@@ -64,7 +58,7 @@ if (isset($_POST['art-del-btn'])) {
                         <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="researcher_delete.php">Delete Articles <i class="bi bi-dash-circle"></i></a>
                     </li>
                     <li class="nav-item ps-5">
-                        <a class="navbar-name" aria-current="page" href="../Login/logout.php">Logout <i class="bi bi-box-arrow-right"></i></a>
+                        <a class="navbar-name" aria-current="page" href="../login.php">Logout <i class="bi bi-box-arrow-right"></i></a>
                     </li>
                 </ul>
             </div>
@@ -81,7 +75,7 @@ if (isset($_POST['art-del-btn'])) {
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <button type="submit" class="btn btn-outline-dark" name="art-del-btn">
-                        Delete!
+                        Delete Article!
                     </button>
                 </div>
             </div>
