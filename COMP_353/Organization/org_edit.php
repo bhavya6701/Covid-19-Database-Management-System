@@ -5,30 +5,39 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
 }
 
 require_once '../database.php';
-$db = $conn->prepare('SELECT * FROM evc353_1.Article');
+$db = $conn->prepare('SELECT * 
+                        FROM evc353_1.ProStaTer
+                        WHERE ProStaTer.cName IN (SELECT citizenship 
+                                                    FROM evc353_1.User 
+                                                    WHERE User.uID=:userID)');
+$db->bindParam(":userID", $_SESSION["uID"]);
 $db->execute();
-if (isset($_POST['art-edit-btn'])) {
-    $artIDList = $conn->prepare('SELECT artID 
-                                    FROM evc353_1.Article, evc353_1.Author, evc353_1.Researcher
-                                    WHERE Article.authID = Author.authID AND Author.rID = Researcher.rID AND Researcher.uID = :userID');
-    $artIDList->bindParam(":userID", $_SESSION["uID"]);
-    $artIDList->execute();
+if (isset($_POST['org-edit-btn'])) {
+    $proStaTerList = $conn->prepare('SELECT prostater 
+                                        FROM evc353_1.ProStaTer
+                                        WHERE ProStaTer.cName IN (SELECT citizenship 
+                                                                    FROM evc353_1.User 
+                                                                    WHERE User.uID=:userID)');
+    $proStaTerList->bindParam(":userID", $_SESSION["uID"]);
+    $proStaTerList->execute();
     $loop = true;
-    while ($loop && $row = $artIDList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
-        if ($_POST['artid'] == $row['artID'])
+    while ($loop && $row = $proStaTerList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
+        if ($_POST['proStaTer'] == $row['prostater'])
             $loop = false;
     if (!$loop) {
-        $article = $conn->prepare('UPDATE evc353_1.Article 
-                                SET majorTopic = :majorTop, minorTopic = :minorTop, summary =:summ, article = :article
-                                WHERE artID = :artid');
-        $article->bindParam(':artid', $_POST["artid"]);
-        $article->bindParam(':majorTop', $_POST["majorTop"]);
-        $article->bindParam(':minorTop', $_POST["minorTop"]);
-        $article->bindParam(':summ', $_POST["summ"]);
-        $article->bindParam(':article', $_POST["article"]);
+        $prostater = $conn->prepare('UPDATE evc353_1.ProStaTer 
+                                    SET population = :pop , vaccPopulation = :vaccpop , deaths = :died, unvaccInfected = :unvinf, vacc_Died = :vaccdied 
+                                    WHERE prostater = :proStaTer');
+        $prostater->bindParam(':proStaTer', $_POST['proStaTer']);
+        $prostater->bindParam(':pop', $_POST["pop"]);
+        $prostater->bindParam(':vaccpop', $_POST["vaccpop"]);
+        $prostater->bindParam(':died', $_POST["died"]);
+        $prostater->bindParam(':unvinf', $_POST["unvinf"]);
+        $prostater->bindParam(':vaccdied', $_POST["vaccdied"]);
 
-        $article->execute();
-        header("Location: researcher.php");
+        $prostater->execute();
+
+        header("Location: Organization.php");
     }
 }
 ?>
@@ -80,43 +89,40 @@ if (isset($_POST['art-edit-btn'])) {
     </nav>
 
     <div class="container pt-3">
-        <h1 class="display-4">EDIT A RECORD</h1>
+        <h1 class="display-4 mt-3">EDIT COVID-19 DATA</h1>
         <form class="form-inline" action="org_edit.php" method="POST">
-            <div class="row mt-2">
+            <div class="row mt-3">
                 <div class="input-group col-lg mt-2 my-md-none">
-                    <label for="artid" class="input-group-text"><i class="bi bi-hash"></i></label>
-                    <input id="artid" type="number" name="artid" class="form-control texthover" maxlength="12" placeholder="Article ID" autocomplete="off" required />
+                    <label for="prostater" class="input-group-text"><i class="bi bi-geo"></i></label>
+                    <input id="prostater" name="proStaTer" type="text" class="form-control" maxlength="25" placeholder="ProStaTer" autocomplete="off" required />
                 </div>
-            </div>
-            <div class="row mt-2">
-                <label for="majorTop" class="col-form-label mt-2">Major Topic:</label>
-                <div class="input-group col-lg my-md-none">
-                    <textarea id="majorTop" name="majorTop" type="text" class="form-control" rows="2" autocomplete="off" required></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <label for="minorTop" class="col-form-label  mt-2">Minor Topic:</label>
-                <div class="input-group col-lg my-md-none">
-                    <textarea id="minorTop" name="minorTop" type="text" class="form-control" rows="2" autocomplete="off" required></textarea>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="updPopulation" class="input-group-text"><i class="bi bi-people"></i></label>
+                    <input id="updPopulation" name="pop" type="number" class="form-control" maxlength="12" placeholder="Population" autocomplete="off" required />
                 </div>
             </div>
 
             <div class="row">
-                <label for="summ" class="col-form-label mt-2">Summary:</label>
-                <div class="input-group col-lg my-md-none">
-                    <textarea id="summ" name="summ" type="text" class="form-control texthover" maxlength="100" rows="3" autocomplete="off" required></textarea>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="updVaccinated" class="input-group-text"><i class="bi bi-capsule-pill"></i></label>
+                    <input id="updVaccinated" name="vaccpop" type="number" class="form-control" maxlength="12" placeholder="Vaccinated" autocomplete="off" required />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="updInfected" class="input-group-text"><i class="bi bi-virus"></i></label>
+                    <input id="updInfected" name="unvinf" type="number" class="form-control" maxlength="12" placeholder="Unvaccinated Infected" autocomplete="off" required />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="updDeaths" class="input-group-text"><i class="bi bi-droplet-half"></i></label>
+                    <input id="updDeaths" name="died" type="number" class="form-control" maxlength="12" placeholder="Deaths" autocomplete="off" required />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="updVaccDied" class="input-group-text"><i class="bi bi-droplet-half"></i></label>
+                    <input id="updVaccDied" name="vaccdied" type="number" class="form-control" maxlength="12" placeholder="Vaccinated Deaths" autocomplete="off" />
                 </div>
             </div>
 
-            <div class="row">
-                <label for="article" class="col-form-label mt-2">Article:</label>
-                <div class="input-group col-lg my-md-none">
-                    <textarea id="article" name="article" type="text" class="form-control texthover" rows="6" autocomplete="off" required></textarea>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-outline-dark my-3" name="art-edit-btn" id="submit">
-                Edit Record!
+            <button type="submit" class="btn btn-outline-dark mt-3" name="org-edit-btn" id="submit">
+                Edit Data!
             </button>
         </form>
     </div>
