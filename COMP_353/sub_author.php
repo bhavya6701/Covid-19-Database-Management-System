@@ -1,6 +1,12 @@
 <?php
 require_once 'database.php';
-$db = $conn->prepare('SELECT * FROM testdbms.author');
+$db = $conn->prepare('SELECT authID, CONCAT(fName, " ", lName) AS author
+                      FROM evc353_1.Author, evc353_1.Researcher, evc353_1.User
+                      WHERE Author.rID = Researcher.rID AND Researcher.uID = User.uID
+                      UNION
+                      SELECT authID, CONCAT(fName, " ", lName) AS author
+                      FROM evc353_1.Author, evc353_1.Organization, evc353_1.User
+                      WHERE Author.oID = Organization.oID AND Organization.delegateUID = User.uID');
 $db->execute();
 ?>
 
@@ -56,8 +62,7 @@ $db->execute();
         <div class="form-check py-2">
           <input class="form-check-input" name="auth[]" type="checkbox" value="<?= $row['authID'] ?>" id="<?= $row['authID'] ?>">
           <label class="form-check-label" for="<?= $row['authID'] ?>">
-            <!-- <?= $row['fName'] . " " . $row['lName'] ?> -->
-            <?= $row['authID'] ?>
+            <?= $row['author'] ?>
           </label>
         </div>
       <?php } ?>

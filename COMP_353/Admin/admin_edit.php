@@ -1,13 +1,13 @@
 <?php
-// session_start();
-// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
-//     header("Location: ../index.php");
-// }
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+    header("Location: ../index.php");
+}
 
 require_once '../database.php';
 if (isset($_POST["editbtn"])) {
     $idlist = $conn->prepare('SELECT uID 
-                            FROM testdbms.user');
+                            FROM evc353_1.User');
     $idlist->execute();
     $loop = true;
     while ($loop && $row = $idlist->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
@@ -16,7 +16,7 @@ if (isset($_POST["editbtn"])) {
         }
     }
     if ($loop) {
-        $user = $conn->prepare('UPDATE testdbms.user 
+        $user = $conn->prepare('UPDATE evc353_1.User 
                                 SET userType = :utype, fName = :fname, lname = :lname, citizenship = :citizenship, emailAddress = :email, phoneNumber = :phone, organizationName = :organization, dateOfBirth = :birthdate
                                 WHERE uID = :userid;');
 

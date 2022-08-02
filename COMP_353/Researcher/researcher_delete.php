@@ -1,16 +1,24 @@
-<?php require_once '../database.php';
-$db = $conn->prepare('SELECT * FROM testdbms.Article');
+<?php
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+    header("Location: ../index.php");
+}
+
+require_once '../database.php';
+$db = $conn->prepare('SELECT * FROM evc353_1.Article');
 $db->execute();
 if (isset($_POST['art-del-btn'])) {
     $artIDList = $conn->prepare('SELECT artID 
-                                    FROM testdbms.Article');
+                                    FROM evc353_1.Article, evc353_1.Author, evc353_1.Researcher
+                                    WHERE Article.authID = Author.authID AND Author.rID = Researcher.rID AND Researcher.uID = :userID');
+    $artIDList->bindParam(":userID", $_SESSION["uID"]);
     $artIDList->execute();
     $loop = true;
     while ($loop && $row = $artIDList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
         if ($_POST['artid'] == $row['artID'])
             $loop = false;
     if (!$loop) {
-        $article = $conn->prepare('DELETE FROM testdbms.Article 
+        $article = $conn->prepare('DELETE FROM evc353_1.Article 
                                 WHERE artID = :artid');
         $article->bindParam(':artid', $_POST["artid"]);
         $article->execute();

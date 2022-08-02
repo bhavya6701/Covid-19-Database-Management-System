@@ -1,12 +1,6 @@
 <?php require_once 'database.php';
-
-$db = $conn->prepare('SELECT * FROM testdbms.prostater');
-
-if (isset($_POST["btnprostater"])) {
-  $db = $conn->prepare('SELECT * FROM testdbms.prostater WHERE prostater = ' . $_POST["searchprostater"]);
-}
-
-// $db->execute();
+$db = $conn->prepare('SELECT * FROM evc353_1.ProStaTer');
+$db->execute();
 ?>
 
 <!DOCTYPE html>

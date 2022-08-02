@@ -1,12 +1,7 @@
 <?php require_once 'database.php';
 
-$db = $conn->prepare('SELECT * FROM testdbms.vaccine');
-
-if (isset($_POST["btnvaccine"])) {
-    $db = $conn->prepare('SELECT * FROM testdbms.vaccine WHERE vName = ' . $_POST["searchvaccine"]);
-}
-
-// $db->execute();
+$db = $conn->prepare('SELECT * FROM evc353_1.Vaccine');
+$db->execute();
 ?>
 
 <!DOCTYPE html>
@@ -83,7 +78,7 @@ if (isset($_POST["btnvaccine"])) {
                         <td><?= $row['prostater'] ?></td>
                         <td><?= $row['totalVaccinated'] ?></td>
                         <td><?= $row['vaccInfected'] ?></td>
-                        <td><?= $row['vacDeath'] ?></td>
+                        <td><?= $row['vaccDeath'] ?></td>
                     </tr>
                 <?php } ?>
             </tbody>

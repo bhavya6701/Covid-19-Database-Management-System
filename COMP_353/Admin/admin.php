@@ -1,11 +1,11 @@
 <?php
-// session_start();
-// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
-//   header("Location: ../index.php");
-// }
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+  header("Location: ../index.php");
+}
 
 require_once '../database.php';
-$db = $conn->prepare('SELECT * FROM testdbms.user');
+$db = $conn->prepare('SELECT * FROM evc353_1.User');
 $db->execute();
 ?>
 
@@ -77,6 +77,8 @@ $db->execute();
           <th>Phone Number</th>
           <th>Organization</th>
           <th>Date of Birth</th>
+          <th>Status</th>
+          <th>Suspension Date</th>
         </tr>
       </thead>
       <tbody class="table-group-divider">
@@ -91,6 +93,8 @@ $db->execute();
             <td><?= $row['phoneNumber'] ?></td>
             <td><?= $row['organizationName'] ?></td>
             <td><?= $row['dateOfBirth'] ?></td>
+            <td><?= $row['accStatus'] ?></td>
+            <td><?= $row['suspenstionDate'] ?></td>
           </tr>
         <?php } ?>
       </tbody>

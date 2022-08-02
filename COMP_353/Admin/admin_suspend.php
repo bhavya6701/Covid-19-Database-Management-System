@@ -1,28 +1,38 @@
 <?php
-// session_start();
-// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
-//     header("Location: ../index.php");
-// }
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+    header("Location: ../index.php");
+}
 
 require_once '../database.php';
 if (isset($_POST["suspendbtn"])) {
     $idlist = $conn->prepare('SELECT uID, userType 
-                                FROM testdbms.user');
+                                FROM evc353_1.User');
     $idlist->execute();
     $loop = false;
-    while ($loop && $row = $idlist->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
+    while ($row = $idlist->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
         if (strcmp($_POST['userid'], $row['uID']) == 0 && strcmp($row['userType'], "Admin") != 0) {
             $loop = true;
+            break;
         }
     }
     if ($loop) {
-        $user = $conn->prepare('UPDATE testdbms.user 
-                                SET status = "suspended"
-                                WHERE uID = :userid;');
 
-        $user->bindParam(':userid', $_POST["userid"]);
-
-        $user->execute();
+        if (strcmp($_POST["statusType"], "Suspended") == 0) {
+            $user = $conn->prepare('UPDATE evc353_1.User 
+                                    SET suspenstionDate = :dateNow, accStatus = "Suspended"
+                                    WHERE uID = :userid');
+            $date = date("Y-m-d");
+            $user->bindParam(':userid', $_POST["userid"]);
+            $user->bindParam(':dateNow', $date);
+            $user->execute();
+        } else {
+            $user = $conn->prepare('UPDATE evc353_1.User 
+                                    SET  suspenstionDate = null, accStatus = "Active"
+                                    WHERE uID = :userid');
+            $user->bindParam(':userid', $_POST["userid"]);
+            $user->execute();
+        }
         header("Location: admin.php");
     }
 }
@@ -78,19 +88,27 @@ if (isset($_POST["suspendbtn"])) {
     </nav>
 
     <div class="container pt-3">
-        <h1 class="display-4">SUSPEND USER</h1>
+        <h1 class="display-5">SUSPEND/ACTIVE USER</h1>
         <form class="form-inline" action="admin_suspend.php" method="POST">
-            <div class="row mt-2">
-                <div class="input-group col-lg mt-2 my-md-none">
+            <div class="row mt-4">
+                <div class="input-group my-md-none w-25">
                     <label for="userid" class="input-group-text"><i class="bi bi-hash"></i></label>
-                    <input id="userid" type="number" class="form-control texthover" size="50" placeholder="User ID" autocomplete="off" required />
+                    <input id="userid" name="userid" type="number" class="form-control texthover" size="50" placeholder="User ID" autocomplete="off" required />
                 </div>
-                <div class="input-group col-lg mt-2 my-md-none">
+                <div class="w-25">
+                    <select class="form-select col d-sm-inline" name="statusType" id="statusType">
+                        <option value="Active">Active</option>
+                        <option value="Suspended">Suspend</option>
+                    </select>
+                </div>
+                <div class="input-group col-lg  my-md-none">
                     <button type="submit" class="btn btn-outline-dark" name="suspendbtn" id="submit">
-                        Suspend User!
+                        Suspend/Active User!
                     </button>
                 </div>
+
             </div>
+
         </form>
     </div>
 

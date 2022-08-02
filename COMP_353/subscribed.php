@@ -2,19 +2,18 @@
 require_once 'database.php';
 $user_id;
 if (isset($_GET['emailID'])) {
-    $db = $conn->prepare('SELECT uID FROM testdbms.user WHERE emailAddress = :email');
+    $db = $conn->prepare('SELECT uID FROM evc353_1.User WHERE emailAddress = :email');
     $db->bindParam(':email', $_GET['emailID']);
     $db->execute();
     $user_id = $db->fetchColumn();
     if ($user_id == null) {
         header("Location: regular_user.php");
-    } else {
     }
 }
 if (isset($_GET['auth'])) {
     $author = $_GET['auth'];
     foreach ($author as $authID) {
-        $db = $conn->prepare('INSERT INTO Author_Subs VALUES(:authID, :userID)');
+        $db = $conn->prepare('INSERT INTO evc353_1.Author_Subs VALUES(:authID, :userID)');
         $db->bindParam(':authID', $authID);
         $db->bindParam(':userID', $user_id);
         $db->execute();

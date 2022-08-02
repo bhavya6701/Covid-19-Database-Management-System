@@ -49,9 +49,9 @@ session_start();
       session_unset();
     }
     ?>
-    <form action="loginhandler.php" type="POST">
-      <label for="email" class="col-sm-2 col-form-label">Email</label>
-      <input type="email" name="email" class="form-control" id="email" placeholder="abcd1234@email.com" required />
+    <form action="loginhandler.php" method="POST">
+      <label for="username" class="col-sm-2 col-form-label">Username</label>
+      <input type="text" size="20" name="username" class="form-control" id="username" placeholder="user" required />
       <label for="password" class="col-sm-2 col-form-label">Password</label>
       <input type="password" name="password" class="form-control" id="password" placeholder="********" required />
       <div class="row my-3">

@@ -10,9 +10,9 @@ CASE WHEN a.authType = "Researcher" THEN (
   FROM Organization org, Author
   WHERE a.authID = Author.authID AND Author.oID = org.oID
 ) END AS author, publicationDate, majorTopic, minorTopic, summary, article
-FROM Article a
-ORDER BY publicationDate ASC');
-// $db->execute();
+FROM evc353_1.Article a
+ORDER BY publicationDate DESC');
+$db->execute();
 ?>
 
 <!DOCTYPE html>
@@ -67,30 +67,18 @@ ORDER BY publicationDate ASC');
             </li>
         </ul>
 
-        <table class="table table-bordered my-4 align-middle">
-            <thead>
-                <tr class="text-center">
-                    <th>Publication Date</th>
-                    <th>Major Topic</th>
-                    <th>Minor Topic</th>
-                    <th>Summary</th>
-                    <th>Article</th>
-                    <th>Author</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider">
-                <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
-                    <tr class="text-center" id="<?= $row['prostater'] ?>">
-                        <td><?= $row['publicationDate'] ?></td>
-                        <td><?= $row['majorTopic'] ?></td>
-                        <td><?= $row['minorTopic'] ?></td>
-                        <td><?= $row['summary'] ?></td>
-                        <td><?= $row['article'] ?></td>
-                        <td><?= $row['author'] ?></td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+
+        <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
+            <div class="card my-3" style="width: 100%;">
+                <div class="card-body" id="<?= $row['author'] ?>">
+                    <h5 class="card-title"><?= $row['majorTopic'] ?></h5>
+                    <h6 class="card-subtitle mb-2 lead"><?= $row['minorTopic'] ?> | <?= $row['publicationDate'] ?> </h6>
+                    <p class="card-text"><?= $row['summary'] ?></p>
+                    <p class="card-text"><?= $row['article'] ?></p>
+                    <div class="text-muted">- <?= $row['author'] ?></div>
+                </div>
+            </div>
+        <?php } ?>
     </div>
 
 

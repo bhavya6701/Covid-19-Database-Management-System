@@ -1,17 +1,17 @@
 <?php
-// session_start();
-// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
-//     header("Location: ../index.php");
-// }
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+    header("Location: ../index.php");
+}
 
 require_once '../database.php';
-$db = $conn->prepare('SELECT MAX(uID) FROM testdbms.user');
+$db = $conn->prepare('SELECT MAX(uID) FROM evc353_1.User');
 $db->execute();
 $newrow = ($db->fetch())[0] + 1;
 
 if (isset($_POST["addbtn"])) {
     $emailList = $conn->prepare('SELECT emailAddress 
-                                FROM testdbms.user');
+                                FROM evc353_1.User');
     $emailList->execute();
     $loop = true;
     while ($loop && $row = $emailList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
@@ -21,8 +21,8 @@ if (isset($_POST["addbtn"])) {
         }
     }
     if ($loop) {
-        $user = $conn->prepare('INSERT INTO testdbms.user 
-                                VALUES(:userid, :utype, :fname, :lname, :citizenship, :email, :phone, :organization, :birthdate)');
+        $user = $conn->prepare('INSERT INTO evc353_1.User 
+                                VALUES(:userid, :utype, :fname, :lname, :citizenship, :email, :phone, :organization, :birthdate, "Active", null)');
 
         $user->bindParam(':userid', $newrow);
         $user->bindParam(':utype', $_POST["utype"]);

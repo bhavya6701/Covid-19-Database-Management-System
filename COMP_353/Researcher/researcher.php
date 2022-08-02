@@ -1,10 +1,13 @@
 <?php
 session_start();
-// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
-//     header("Location: ../index.php");
-// }
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == false) {
+  header("Location: ../index.php");
+}
+
 require_once '../database.php';
-$db = $conn->prepare('SELECT * FROM testdbms.Article');
+$db = $conn->prepare('SELECT * FROM evc353_1.Article, evc353_1.Author, evc353_1.Researcher
+                      WHERE Article.authID = Author.authID AND Author.rID = Researcher.rID AND Researcher.uID = :userID');
+$db->bindParam(":userID", $_SESSION["uID"]);
 $db->execute();
 ?>
 
