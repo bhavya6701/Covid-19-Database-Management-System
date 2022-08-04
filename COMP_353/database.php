@@ -1,4 +1,3 @@
-
 <?php
 $server = 'evc353.encs.concordia.ca';
 $username = 'evc353_1';
@@ -11,3 +10,4 @@ try {
     die('Connection Failed: ' . $e->getMessage());
 }
 ?>
+<!--  -->

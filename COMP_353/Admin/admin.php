@@ -8,7 +8,6 @@ require_once '../database.php';
 $db = $conn->prepare('SELECT * FROM evc353_1.User');
 $db->execute();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -94,7 +93,7 @@ $db->execute();
             <td><?= $row['organizationName'] ?></td>
             <td><?= $row['dateOfBirth'] ?></td>
             <td><?= $row['accStatus'] ?></td>
-            <td><?= $row['suspenstionDate'] ?></td>
+            <td><?= $row['suspensionDate'] ?></td>
           </tr>
         <?php } ?>
       </tbody>

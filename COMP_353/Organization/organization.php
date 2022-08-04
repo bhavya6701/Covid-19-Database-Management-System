@@ -10,7 +10,6 @@ $db = $conn->prepare('SELECT * FROM evc353_1.ProStaTer
 $db->bindParam(":userID", $_SESSION["uID"]);
 $db->execute();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

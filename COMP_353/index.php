@@ -2,7 +2,6 @@
 $db = $conn->prepare('SELECT * FROM evc353_1.ProStaTer');
 $db->execute();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

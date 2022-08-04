@@ -1,7 +1,7 @@
-
 <?php
-require_once '../database.php';
 session_start();
+require_once '../database.php';
+
 $_SESSION['loggedin'] = true;
 $db = $conn->prepare('SELECT * 
                         FROM evc353_1.Special_User, evc353_1.User
@@ -22,7 +22,13 @@ while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
         } else if (strcmp($row["userType"], "Researcher") == 0) {
             header("Location: ../Researcher/researcher.php");
         } else if (strcmp($row["userType"], "Delegate") == 0) {
-            if (str_contains($row["organization"], "Government")) {
+            $db2 = $conn->prepare('SELECT organizationType 
+                        FROM evc353_1.Organization
+                        WHERE delegateUID = :uID');
+            $db2->bindParam(":uID", $row["uID"]);
+            $db2->execute();
+            $val = $db2->fetchColumn();
+            if (strcmp($val, "Government Agency") == 0) {
                 header("Location: ../Organization/organization.php");
             } else {
                 header("Location: ../Researcher/researcher.php");
@@ -35,3 +41,4 @@ if ($check) {
     header("Location: login.php");
 }
 ?>
+<!--  -->

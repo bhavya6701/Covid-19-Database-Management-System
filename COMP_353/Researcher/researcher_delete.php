@@ -25,7 +25,6 @@ if (isset($_POST['art-del-btn'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

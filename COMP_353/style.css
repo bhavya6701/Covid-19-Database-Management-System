@@ -34,3 +34,11 @@
 	text-align: center;
 	width: 100px !important;
 }
+
+.link-sign-up {
+	color: rgb(178, 178, 178);
+}
+
+.link-sign-up:hover {
+	color: rgb(0, 0, 0);
+}

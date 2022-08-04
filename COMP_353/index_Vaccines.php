@@ -1,9 +1,7 @@
 <?php require_once 'database.php';
-
 $db = $conn->prepare('SELECT * FROM evc353_1.Vaccine');
 $db->execute();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

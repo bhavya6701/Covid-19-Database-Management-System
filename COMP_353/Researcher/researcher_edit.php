@@ -31,7 +31,6 @@ if (isset($_POST['art-edit-btn'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

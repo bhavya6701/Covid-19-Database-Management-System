@@ -70,7 +70,9 @@ if (isset($_POST['art-sub-btn'])) {
 
         $subject = "New Article Added";
         $txt = "Check out the new article added by the researcher " . $researcherName . ".";
-        $headers = "From: bhavyaruparelia@gmail.com";
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers .= 'From: evc353_1@encs.concordia.ca' . "\r\n";
 
         mail($to, $subject, $txt, $headers);
 

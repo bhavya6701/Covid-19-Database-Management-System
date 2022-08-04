@@ -1,5 +1,4 @@
 <?php require_once 'database.php';
-
 $db = $conn->prepare('SELECT
 CASE WHEN a.authType = "Researcher" THEN (
   SELECT CONCAT(fName, " ", lName)
@@ -14,7 +13,6 @@ FROM evc353_1.Article a
 ORDER BY publicationDate DESC');
 $db->execute();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

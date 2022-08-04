@@ -9,7 +9,6 @@ $db = $conn->prepare('SELECT authID, CONCAT(fName, " ", lName) AS author
                       WHERE Author.oID = Organization.oID AND Organization.delegateUID = User.uID');
 $db->execute();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,7 +30,7 @@ $db->execute();
 <body class="bg-light">
   <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand navbar-organization" href="../COMP_353/index.php">COVID-19 Pandemic Progress System</a>
+      <a class="navbar-brand navbar-organization" href="index.php">COVID-19 Pandemic Progress System</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -41,7 +40,7 @@ $db->execute();
             <a class="navbar-name" aria-current="page" href="Login/login.php">Login <i class="bi bi-person-circle"></i></a>
           </li>
           <li class="nav-item ps-5">
-            <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="../COMP_353/sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
+            <a class="navbar-name" style="color: white !important; pointer-events: none;" aria-current="page" href="sub_author.php">Author Subscription <i class="bi bi-person-plus"></i></a>
           </li>
         </ul>
       </div>
@@ -52,11 +51,12 @@ $db->execute();
 
     <form class="pt-2" action="subscribed.php" method="GET">
       <div class="row d-flex">
-        <div class="col d-flex">
+        <div class="col mb-2 d-flex">
           <input id="emailID" name="emailID" class="form-control me-2 input-box" type="email" placeholder="abcd1234@email.com" required>
           <button id="btnEmail" name="btnEmail" class="btn btn-outline-dark" type="submit"><i class="bi bi-forward-fill"></i></button>
         </div>
       </div>
+      <a class="link-sign-up" href="regular_user.php">Not A User? Sign Up!</a>
       <h1 class="display-6 pt-3">Authors:</h1>
       <?php while ($row = $db->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) { ?>
         <div class="form-check py-2">

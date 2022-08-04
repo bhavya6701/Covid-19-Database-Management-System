@@ -20,7 +20,7 @@ if (isset($_POST["suspendbtn"])) {
 
         if (strcmp($_POST["statusType"], "Suspended") == 0) {
             $user = $conn->prepare('UPDATE evc353_1.User 
-                                    SET suspenstionDate = :dateNow, accStatus = "Suspended"
+                                    SET suspensionDate = :dateNow, accStatus = "Suspended"
                                     WHERE uID = :userid');
             $date = date("Y-m-d");
             $user->bindParam(':userid', $_POST["userid"]);
@@ -28,7 +28,7 @@ if (isset($_POST["suspendbtn"])) {
             $user->execute();
         } else {
             $user = $conn->prepare('UPDATE evc353_1.User 
-                                    SET  suspenstionDate = null, accStatus = "Active"
+                                    SET  suspensionDate = null, accStatus = "Active"
                                     WHERE uID = :userid');
             $user->bindParam(':userid', $_POST["userid"]);
             $user->execute();
@@ -37,7 +37,6 @@ if (isset($_POST["suspendbtn"])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -93,7 +92,7 @@ if (isset($_POST["suspendbtn"])) {
             <div class="row mt-4">
                 <div class="input-group my-md-none w-25">
                     <label for="userid" class="input-group-text"><i class="bi bi-hash"></i></label>
-                    <input id="userid" name="userid" type="number" class="form-control texthover" size="50" placeholder="User ID" autocomplete="off" required />
+                    <input id="userid" name="userid" type="number" class="form-control texthover" maxlength="50" placeholder="User ID" autocomplete="off" required />
                 </div>
                 <div class="w-25">
                     <select class="form-select col d-sm-inline" name="statusType" id="statusType">

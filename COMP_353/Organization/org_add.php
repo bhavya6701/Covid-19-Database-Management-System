@@ -15,7 +15,7 @@ if (isset($_POST["addbtn"])) {
     $populationList->execute();
     $loop = true;
     while ($loop && $row = $populationList->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
-        if (strcmp($_POST['pop'], $row['updPopulation']) == 0) {
+        if (strcmp($_POST['updPopulation'], $row['updPopulation']) == 0) {
             $loop = false;
             break;
         }
@@ -28,14 +28,15 @@ if (isset($_POST["addbtn"])) {
         $cName = $country->fetchColumn();
 
         $prostater = $conn->prepare('INSERT INTO evc353_1.Update
-                                VALUES(:updateID,:prostater,:cName,:updateDate,:updPopuation,:updVaccinated,:updInfected,:updDeaths,:updVaccDied,:pfizerVacc,:pfizerDied,:AstraZenVacc,:AstraZenDied,:modernaVacc,:modernaDied,:jjVacc, :jjDied)');
+                                VALUES(:updateID, :prostater, :cName, :updateDate, :updPopulation, :updVaccinated, :updInfected, :updDeaths, :updVaccDied, :pfizerVacc, :pfizerDied, :AstraZenVacc, :AstraZenDied, :modernaVacc, :modernaDied, :jjVacc, :jjDied)');
         $date = date("Y-m-d");
         $prostater->bindParam(':updateID', $newrow);
         $prostater->bindParam(':prostater', $_POST["prostater"]);
         $prostater->bindParam(':cName', $cName);
         $prostater->bindParam(':updateDate', $date);
-        $prostater->bindParam(':updPopuation', $_POST["updPopuation"]);
+        $prostater->bindParam(':updPopulation', $_POST["updPopulation"]);
         $prostater->bindParam(':updVaccinated', $_POST["updVaccinated"]);
+        $prostater->bindParam(':updInfected', $_POST["updInfected"]);
         $prostater->bindParam(':updDeaths', $_POST["updDeaths"]);
         $prostater->bindParam(':updVaccDied', $_POST["updVaccDied"]);
         $prostater->bindParam(':pfizerVacc', $_POST["pfizerVacc"]);
@@ -49,35 +50,52 @@ if (isset($_POST["addbtn"])) {
 
         $prostater->execute();
 
+        $temp = $conn->prepare('SELECT DISTINCT rName FROM ProStaTer WHERE ProStaTer.cName = :cName');
+        $temp->bindParam(":cName", $cName);
+        $temp->execute();
+        $rName = $temp->fetchColumn();
+        $temp2 = $conn->prepare('SELECT DISTINCT agencyName from ProStaTer WHERE ProStaTer.cName=:cName');
+        $temp2->bindParam(":cName", $rName);
+        $temp2->execute();
+        $agencyName = $temp2->fetchColumn();
+
+
         $prostater2 = $conn->prepare('INSERT INTO ProStaTer 
-                                VALUES(:prostater, :cName,
-                                (SELECT rName from ProStaTer WHERE ProStaTer.cName = :cName GROUP BY cName),
-                                (SELECT agencyName from ProStaTer WHERE ProStaTer.cName = :cName GROUP BY cName),
-                                :updPopulation, :updVaccinated, :updDeaths, :updInfected, :updVaccDied)');
+                                VALUES(:prostater, :cName, :rName, :agencyName, :updPopulation, :updVaccinated, :updDeaths, :updInfected, :updVaccDied)');
 
         $prostater2->bindParam(':prostater', $_POST["prostater"]);
         $prostater2->bindParam(':cName', $cName);
-        $prostater2->bindParam(':updPopuation', $_POST["updPopuation"]);
+        $prostater2->bindParam(':rName', $rName);
+        $prostater2->bindParam(':agencyName', $agencyName);
+        $prostater2->bindParam(':updPopulation', $_POST["updPopulation"]);
         $prostater2->bindParam(':updVaccinated', $_POST["updVaccinated"]);
         $prostater2->bindParam(':updDeaths', $_POST["updDeaths"]);
         $prostater2->bindParam(':updInfected', $_POST["updInfected"]);
         $prostater2->bindParam(':updVaccDied', $_POST["updVaccDied"]);
 
+        $prostater2->execute();
+
         $prostater3 = $conn->prepare('INSERT INTO Vaccine VALUES 
-        ("Pfizer",:prostater,:pfizerVacc,:updInfected,:pfizerDied),
-        ("Moderna",:prostater,:modernaVacc,:updInfected,:modernaDied),
-        ("AstraZeneca",:prostater,:AstraZenVacc,:updInfected,:AstraZenDied),
-        ("Johnson & Johnson",:prostater,:jjVacc,:updInfected,:jjDied)');
+        ("Pfizer", :prostater, :pfizerVacc, :pfizerInfected, :pfizerDied),
+        ("Moderna", :prostater, :modernaVacc, :modernaInfected, :modernaDied),
+        ("AstraZeneca", :prostater, :AstraZenVacc, :AstraZenInfected, :AstraZenDied),
+        ("Johnson & Johnson", :prostater, :jjVacc, :jjInfected, :jjDied)');
 
+        $prostater3->bindParam(':prostater', $_POST["prostater"]);
+        $prostater3->bindParam(':pfizerVacc', $_POST["pfizerVacc"]);
+        $prostater3->bindParam(':pfizerInfected', $_POST["pfizerInfected"]);
+        $prostater3->bindParam(':pfizerDied', $_POST["pfizerDied"]);
+        $prostater3->bindParam(':AstraZenVacc', $_POST["AstraZenVacc"]);
+        $prostater3->bindParam(':modernaInfected', $_POST["modernaInfected"]);
+        $prostater3->bindParam(':AstraZenDied', $_POST["AstraZenDied"]);
+        $prostater3->bindParam(':modernaVacc', $_POST["modernaVacc"]);
+        $prostater3->bindParam(':AstraZenInfected', $_POST["AstraZenInfected"]);
+        $prostater3->bindParam(':modernaDied', $_POST["modernaDied"]);
+        $prostater3->bindParam(':jjVacc', $_POST["jjVacc"]);
+        $prostater3->bindParam(':jjInfected', $_POST["jjInfected"]);
+        $prostater3->bindParam(':jjDied', $_POST["jjDied"]);
 
-
-
-
-
-
-
-
-
+        $prostater3->execute();
 
         header("Location: organization.php");
     }
@@ -138,8 +156,8 @@ if (isset($_POST["addbtn"])) {
                     <input id="prostater" name="prostater" type="text" class="form-control" maxlength="25" placeholder="ProStaTer" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
-                    <label for="updPopuation" class="input-group-text"><i class="bi bi-people"></i></label>
-                    <input id="updPopuation" name="updPopuation" type="number" class="form-control" maxlength="12" placeholder="Population" autocomplete="off" required />
+                    <label for="updPopulation" class="input-group-text"><i class="bi bi-people"></i></label>
+                    <input id="updPopulation" name="updPopulation" type="number" class="form-control" maxlength="12" placeholder="Population" autocomplete="off" required />
                 </div>
             </div>
 
@@ -148,7 +166,6 @@ if (isset($_POST["addbtn"])) {
                     <label for="updVaccinated" class="input-group-text"><i class="bi bi-capsule-pill"></i></label>
                     <input id="updVaccinated" name="updVaccinated" type="number" class="form-control" maxlength="12" placeholder="Vaccinated" autocomplete="off" required />
                 </div>
-
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="updInfected" class="input-group-text"><i class="bi bi-virus"></i></label>
                     <input id="updInfected" name="updInfected" type="number" class="form-control" maxlength="12" placeholder="Infected" autocomplete="off" required />
@@ -167,21 +184,29 @@ if (isset($_POST["addbtn"])) {
                 <div class="col">
                     <div class="input-group col-lg mt-2 my-md-none">
                         <label for="pfizerVacc" class="input-group-text"><i class="bi bi-capsule"></i></label>
-                        <input id="pfizerVacc" name="pfizerVacc" type="password" class="form-control" maxlength="16" minlength="8" placeholder="Pfizer Vaccinated" autocomplete="off" />
+                        <input id="pfizerVacc" name="pfizerVacc" type="number" class="form-control" maxlength="16" minlength="8" placeholder="Pfizer Vaccinated" autocomplete="off" />
                     </div>
                     <div class="input-group col-lg mt-2 my-md-none">
-                        <label for="pfizerDied" class="input-group-text"><i class="bi bi-virus2"></i></label>
-                        <input id="pfizerDied" name="pfizerVacc" type="password" class="form-control" maxlength="16" minlength="8" placeholder="Pfizer Deaths" autocomplete="off" />
+                        <label for="pfizerInfected" class="input-group-text"><i class="bi bi-virus2"></i></label>
+                        <input id="pfizerInfected" name="pfizerInfected" type="number" class="form-control" maxlength="16" minlength="8" placeholder="Pfizer Infected" autocomplete="off" />
+                    </div>
+                    <div class="input-group col-lg mt-2 my-md-none">
+                        <label for="pfizerDied" class="input-group-text"><i class="bi bi-activity"></i></label>
+                        <input id="pfizerDied" name="pfizerDied" type="number" class="form-control" maxlength="16" minlength="8" placeholder="Pfizer Deaths" autocomplete="off" />
                     </div>
                 </div>
                 <div class="col">
                     <div class="input-group col-lg mt-2 my-md-none">
                         <label for="AstraZenVacc" class="input-group-text"><i class="bi bi-capsule"></i></label>
-                        <input id="AstraZenVacc" name="AstraZenVacc" type="password" class="form-control" maxlength="16" minlength="8" placeholder="AstraZeneca Vaccinated" autocomplete="off" />
+                        <input id="AstraZenVacc" name="AstraZenVacc" type="number" class="form-control" maxlength="16" minlength="8" placeholder="AstraZeneca Vaccinated" autocomplete="off" />
                     </div>
                     <div class="input-group col-lg mt-2 my-md-none">
-                        <label for="AstraZenDied" class="input-group-text"><i class="bi bi-virus2"></i></label>
-                        <input id="AstraZenDied" name="AstraZenDied" type="password" class="form-control" maxlength="16" minlength="8" placeholder="AstraZeneca Deaths" autocomplete="off" />
+                        <label for="AstraZenInfected" class="input-group-text"><i class="bi bi-virus2"></i></label>
+                        <input id="AstraZenInfected" name="AstraZenInfected" type="number" class="form-control" maxlength="16" minlength="8" placeholder="AstraZeneca Infected" autocomplete="off" />
+                    </div>
+                    <div class="input-group col-lg mt-2 my-md-none">
+                        <label for="AstraZenDied" class="input-group-text"><i class="bi bi-activity"></i></label>
+                        <input id="AstraZenDied" name="AstraZenDied" type="number" class="form-control" maxlength="16" minlength="8" placeholder="AstraZeneca Deaths" autocomplete="off" />
                     </div>
                 </div>
             </div>
@@ -190,21 +215,29 @@ if (isset($_POST["addbtn"])) {
                 <div class="col">
                     <div class="input-group col-lg mt-2 my-md-none">
                         <label for="modernaVacc" class="input-group-text"><i class="bi bi-capsule"></i></label>
-                        <input id="modernaVacc" name="modernaVacc" type="password" class="form-control" maxlength="16" minlength="8" placeholder="Moderna Vaccinated" autocomplete="off" />
+                        <input id="modernaVacc" name="modernaVacc" type="number" class="form-control" maxlength="16" minlength="8" placeholder="Moderna Vaccinated" autocomplete="off" />
                     </div>
                     <div class="input-group col-lg mt-2 my-md-none">
-                        <label for="modernaDied" class="input-group-text"><i class="bi bi-virus2"></i></label>
-                        <input id="modernaDied" name="modernaDied" type="password" class="form-control" maxlength="16" minlength="8" placeholder="Moderna Deaths" autocomplete="off" />
+                        <label for="modernaInfected" class="input-group-text"><i class="bi bi-virus2"></i></label>
+                        <input id="modernaInfected" name="modernaInfected" type="number" class="form-control" maxlength="16" minlength="8" placeholder="Moderna Infected" autocomplete="off" />
+                    </div>
+                    <div class="input-group col-lg mt-2 my-md-none">
+                        <label for="modernaDied" class="input-group-text"><i class="bi bi-activity"></i></label>
+                        <input id="modernaDied" name="modernaDied" type="number" class="form-control" maxlength="16" minlength="8" placeholder="Moderna Deaths" autocomplete="off" />
                     </div>
                 </div>
                 <div class="col">
                     <div class="input-group col-lg mt-2 my-md-none">
                         <label for="jjVacc" class="input-group-text"><i class="bi bi-capsule"></i></label>
-                        <input id="jjVacc" name="jjVacc" type="password" class="form-control" maxlength="16" minlength="8" placeholder="Johnson & Johnson Vaccinated" autocomplete="off" />
+                        <input id="jjVacc" name="jjVacc" type="number" class="form-control" maxlength="16" minlength="8" placeholder="Johnson & Johnson Vaccinated" autocomplete="off" />
                     </div>
                     <div class="input-group col-lg mt-2 my-md-none">
-                        <label for="jjDied" class="input-group-text"><i class="bi bi-virus2"></i></label>
-                        <input id="jjDied" name="jjDied" type="password" class="form-control" maxlength="16" minlength="8" placeholder="Johnson & Johnson Deaths" autocomplete="off" />
+                        <label for="jjInfected" class="input-group-text"><i class="bi bi-virus2"></i></label>
+                        <input id="jjInfected" name="jjInfected" type="number" class="form-control" maxlength="16" minlength="8" placeholder="Johnson & Johnson Infected" autocomplete="off" />
+                    </div>
+                    <div class="input-group col-lg mt-2 my-md-none">
+                        <label for="jjDied" class="input-group-text"><i class="bi bi-activity"></i></label>
+                        <input id="jjDied" name="jjDied" type="number" class="form-control" maxlength="16" minlength="8" placeholder="Johnson & Johnson Deaths" autocomplete="off" />
                     </div>
                 </div>
             </div>

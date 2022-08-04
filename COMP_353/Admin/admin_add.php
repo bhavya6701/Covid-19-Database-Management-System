@@ -35,11 +35,19 @@ if (isset($_POST["addbtn"])) {
         $user->bindParam(':birthdate', $_POST["birthdate"]);
 
         $user->execute();
+
+        if (strcmp($_POST["utype"], "Regular") != 0) {
+            $user = $conn->prepare('INSERT INTO evc353_1.Special_User 
+                                VALUES(:userid, :userName, :pass)');
+            $user->bindParam(':userid', $newrow);
+            $user->bindParam(':userName', $_POST["username"]);
+            $user->bindParam(':pass', $_POST["password"]);
+            $user->execute();
+        }
         header("Location: admin.php");
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -95,23 +103,34 @@ if (isset($_POST["addbtn"])) {
             <div class="row mt-2">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="fname" class="input-group-text"><i class="bi bi-person"></i></label>
-                    <input id="fname" name="fname" type="text" class="form-control" size="25" placeholder="First Name" autocomplete="off" required />
-                    <input id="lname" name="lname" type="text" class="form-control" size="25" placeholder="Last Name" autocomplete="off" required />
+                    <input id="fname" name="fname" type="text" class="form-control" maxlength="25" placeholder="First Name" autocomplete="off" required />
+                    <input id="lname" name="lname" type="text" class="form-control" maxlength="25" placeholder="Last Name" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="email" class="input-group-text"><i class="bi bi-envelope"></i></label>
-                    <input id="email" name="email" type="text" class="form-control texthover" size="50" placeholder="Email" autocomplete="off" required />
+                    <input id="email" name="email" type="text" class="form-control" maxlength="50" placeholder="Email" autocomplete="off" required />
                 </div>
             </div>
 
             <div class="row">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="birthdate" class="input-group-text"><i class="bi bi-calendar-plus"></i></label>
-                    <input id="birthdate" name="birthdate" type="date" class="form-control texthover" max="2013-01-01" placeholder="Birthdate" autocomplete="off" required />
+                    <input id="birthdate" name="birthdate" type="date" class="form-control" max="2013-01-01" placeholder="Birthdate" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="phone" class="input-group-text"><i class="bi bi-phone"></i></label>
-                    <input id="phone" name="phone" type="tel" class="form-control" size="20" placeholder="Phone Number" autocomplete="off" required />
+                    <input id="phone" name="phone" type="tel" class="form-control" maxlength="20" placeholder="Phone Number" autocomplete="off" required />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="username" class="input-group-text"><i class="bi bi-emoji-sunglasses"></i></label>
+                    <input id="username" name="username" type="text" class="form-control" max="2013-01-01" maxlength="20" placeholder="Username" autocomplete="off" />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="password" class="input-group-text"><i class="bi bi-key"></i></label>
+                    <input id="password" name="password" type="password" class="form-control" maxlength="16" minlength="8" placeholder="Password" autocomplete="off" />
                 </div>
             </div>
 
@@ -127,13 +146,13 @@ if (isset($_POST["addbtn"])) {
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="citizenship" class="input-group-text"><i class="bi bi-flag"></i></label>
-                    <input id="citizenship" name="citizenship" type="text" class="form-control texthover" size="25" placeholder="Citizenship" autocomplete="off" required />
+                    <input id="citizenship" name="citizenship" type="text" class="form-control" maxlength="25" placeholder="Citizenship" autocomplete="off" required />
                 </div>
             </div>
 
             <div class="input-group col-lg mt-2 my-md-none">
                 <label for="organization" class="input-group-text"><i class="bi bi-building"></i></label>
-                <input id="organization" name="organization" type="text" class="form-control" size="25" placeholder="Organization" autocomplete="off" />
+                <input id="organization" name="organization" type="text" class="form-control" maxlength="25" placeholder="Organization" autocomplete="off" />
             </div>
 
             <button type="submit" class="btn btn-outline-dark mt-3" name="addbtn" id="submit">

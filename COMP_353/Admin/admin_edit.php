@@ -31,11 +31,19 @@ if (isset($_POST["editbtn"])) {
         $user->bindParam(':birthdate', $_POST["birthdate"]);
 
         $user->execute();
+
+        if (strcmp($_POST["utype"], "Regular") != 0) {
+            $user = $conn->prepare('UPDATE evc353_1.Special_User 
+                                    SET uID = :userid, userName = :userName, password = :pass)');
+            $user->bindParam(':userid', $newrow);
+            $user->bindParam(':userName', $_POST["username"]);
+            $user->bindParam(':pass', $_POST["password"]);
+            $user->execute();
+        }
         header("Location: admin.php");
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -91,18 +99,18 @@ if (isset($_POST["editbtn"])) {
             <div class="row mt-2">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="userid" class="input-group-text"><i class="bi bi-hash"></i></label>
-                    <input id="userid" name="userid" type="number" class="form-control" size="25" placeholder="User ID" autocomplete="off" required />
+                    <input id="userid" name="userid" type="number" class="form-control" maxlength="25" placeholder="User ID" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="fname" class="input-group-text"><i class="bi bi-person"></i></label>
-                    <input id="fname" name="fname" type="text" class="form-control" size="25" placeholder="First Name" autocomplete="off" required />
-                    <input id="lname" name="lname" type="text" class="form-control" size="25" placeholder="Last Name" autocomplete="off" required />
+                    <input id="fname" name="fname" type="text" class="form-control" maxlength="25" placeholder="First Name" autocomplete="off" required />
+                    <input id="lname" name="lname" type="text" class="form-control" maxlength="25" placeholder="Last Name" autocomplete="off" required />
                 </div>
             </div>
             <div class="row">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="email" class="input-group-text"><i class="bi bi-envelope"></i></label>
-                    <input id="email" name="email" type="text" class="form-control texthover" size="50" placeholder="Email" autocomplete="off" required />
+                    <input id="email" name="email" type="text" class="form-control texthover" maxlength="50" placeholder="Email" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="birthdate" class="input-group-text">Birthdate &nbsp;<i class="bi bi-calendar-plus"></i></label>
@@ -112,8 +120,19 @@ if (isset($_POST["editbtn"])) {
 
             <div class="row">
                 <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="username" class="input-group-text"><i class="bi bi-emoji-sunglasses"></i></label>
+                    <input id="username" name="username" type="text" class="form-control" max="2013-01-01" maxlength="20" placeholder="Username" autocomplete="off" />
+                </div>
+                <div class="input-group col-lg mt-2 my-md-none">
+                    <label for="password" class="input-group-text"><i class="bi bi-key"></i></label>
+                    <input id="password" name="password" type="password" class="form-control" maxlength="16" minlength="8" placeholder="Password" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-group col-lg mt-2 my-md-none">
                     <label for="phone" class="input-group-text"><i class="bi bi-phone"></i></label>
-                    <input id="phone" name="phone" type="tel" class="form-control" size="20" placeholder="Phone Number" autocomplete="off" required />
+                    <input id="phone" name="phone" type="tel" class="form-control" maxlength="20" placeholder="Phone Number" autocomplete="off" required />
                 </div>
 
                 <div class="input-group col-lg mt-2 my-md-none">
@@ -130,11 +149,11 @@ if (isset($_POST["editbtn"])) {
             <div class="row">
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="citizenship" class="input-group-text"><i class="bi bi-flag"></i></label>
-                    <input id="citizenship" name="citizenship" type="text" class="form-control texthover" size="25" placeholder="Citizenship" autocomplete="off" required />
+                    <input id="citizenship" name="citizenship" type="text" class="form-control texthover" maxlength="25" placeholder="Citizenship" autocomplete="off" required />
                 </div>
                 <div class="input-group col-lg mt-2 my-md-none">
                     <label for="organization" class="input-group-text"><i class="bi bi-building"></i></label>
-                    <input id="organization" name="organization" type="text" class="form-control" size="25" placeholder="Organization" autocomplete="off" />
+                    <input id="organization" name="organization" type="text" class="form-control" maxlength="25" placeholder="Organization" autocomplete="off" />
                 </div>
             </div>
 
