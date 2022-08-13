@@ -1,0 +1,44 @@
+.background {
+	z-index: -1;
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	opacity: 0.7;
+	background-image: url("login-background.jpg");
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+}
+
+.navbar-organization {
+	color: white !important;
+}
+
+.navbar-name {
+	text-decoration: none;
+	color: rgb(178, 178, 178);
+}
+
+.navbar-name:hover {
+	text-decoration: none;
+	color: rgb(255, 255, 255);
+}
+
+.input-box {
+	width: 20rem !important;
+}
+
+.btn-login {
+	text-align: center;
+	width: 100px !important;
+}
+
+.link-sign-up {
+	color: rgb(178, 178, 178);
+}
+
+.link-sign-up:hover {
+	color: rgb(0, 0, 0);
+}
