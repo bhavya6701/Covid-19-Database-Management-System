@@ -1,6 +1,6 @@
 This project is about Covid-19 Data System that connects different organizations, researchers, countries and users to share data and information regarding Covid-19.
 
-To check the project follow the steps below:
+To check the project, follow the steps below:
 1. Clone the repository to your computer.
 2. Create Database and populate data given in 'Table_Creation_Data_Population.sql' file.
 3. Set the server name, username, password and database name in the 'database.php' file.
