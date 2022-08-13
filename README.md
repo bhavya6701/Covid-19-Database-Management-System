@@ -8,6 +8,7 @@ To check the project, follow the steps below:
 5. View the project through index.html
 6. Login with credentials given in the 'Testing - Username_Password.txt' file or with any special user credentials given in the database table - 'Special_User'.
 
+
 Project Contributors:
 - Atul Gupta (https://www.linkedin.com/in/atul-gupta-0a7b8321a/)
 - Devansh Vaidya (https://www.linkedin.com/in/devansh-vaidya/)
