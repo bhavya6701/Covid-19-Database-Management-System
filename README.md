@@ -8,6 +8,10 @@ To check the project, follow the steps below:
 5. View the project through index.html
 6. Login with credentials given in the 'Testing - Username_Password.txt' file or with any special user credentials given in the database table - 'Special_User'.
 
+or visit https://evc353.encs.concordia.ca/ and enter the given credentials:
+Username: evc353_1
+Password: BR_DV_AG
+
 
 Project Contributors:
 - Atul Gupta (https://www.linkedin.com/in/atul-gupta-0a7b8321a/)
