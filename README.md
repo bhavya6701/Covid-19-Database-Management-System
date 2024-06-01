@@ -1,4 +1,4 @@
-This project is about Covid-19 Data System that connects different organizations, researchers, countries and users to share data and information regarding Covid-19.
+This project is about Covid-19 Database Management System that connects different organizations, researchers, countries and users to share data and information regarding Covid-19.
 
 To check the project, follow the steps below:
 1. Clone the repository to your computer.
